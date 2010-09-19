@@ -15,5 +15,5 @@ call git add .
 call git commit -a -m "Automated commit on %fvar%"
 
 :: check if ssh-agent is running
-tasklist|find /i "ssh-egent.exe" || cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i" && exit
+tasklist|find /i "ssh-agent.exe" || cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i" && exit
 call git push origin master
