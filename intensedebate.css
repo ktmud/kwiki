@@ -1,0 +1,25 @@
+#idc-container-parent .startloading{
+    display: none;
+}
+#idc-container {
+    font-family: Candara, Verdana, Tahoma, sans-serif;
+    margin: 40px 0 20px;
+    padding: 10px 0;
+    border-top: solid 1px #246;
+}
+#idc-container a {
+    color: #b74;
+}
+#idc-container a.idc-btn_l * {
+    color: #135;
+}
+#idc-container a:hover {
+    text-decoration: underline;
+}
+#idc-container a.idc-btn_l:hover {
+    text-decoration: none;
+}
+#idc-container h3 {
+    color: #C8C9AC;
+    font-size: 18px;
+}

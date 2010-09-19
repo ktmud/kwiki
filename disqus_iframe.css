@@ -1,0 +1,8 @@
+html {
+}
+textarea {
+    padding: 5px;
+    resize: none;
+    color: #fff;
+    overflow: hidden;
+}
