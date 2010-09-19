@@ -1,29 +1,16 @@
 @echo off
-title 文件同步.. 
+title 通过 Git 同步.. 
 ::Start...
 echo Start synchronizing...
 
-!Title Connecting...
-:: 在这里更改登录信息
-:: open 主机，后面两行是用户名和密码
-ftp yjc.me 
-jyyjcc
-chico12!
+echo Commit changes...
 
-!Title Preparing...
-:: 在这里更改远程和本地目录
-cd wiki.ktmud.com
+:: get date and time 
+for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
+for /f "delims=" %%a in ('time/t') do @set mytime=%%a 
+set fvar=%mydate%%mytime% 
 
-::把目录文件信息保存在文件
-dir . ~list.txt
-!
+:: add all new files 
+call git add . 
+call git commit -a -m "Automated commit by git-sync.bat on %fvar%" 
 
-:: 关闭交互模式
-prompt
-
-!Title Processing... %FtpCommand%
-%FtpCommand%
-
-!Title Disconnecting...
-disconnect
-bye
