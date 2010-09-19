@@ -1,0 +1,16 @@
+*.iml
+.idea/
+.ipr
+.iws
+*~
+~*
+*.diff
+*.patch
+*.bak
+.DS_Store
+Thumb.db
+.project
+.*proj
+.svn/
+*/.svn/
+sync.bat
