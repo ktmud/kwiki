@@ -29,10 +29,9 @@
 <ul>
 <li><a href="#toc_0.1">Windows下的解决方案</a></li>
 <ul>
-<li><a href="#toc_0.1.1">使用 Git + Batch file</a></li>
+<li><a href="#toc_0.1.1">使用 Git + Batch file/VBS</a></li>
 <li><a href="#toc_0.1.2">使用 Github Pages</a></li>
 <li><a href="#toc_0.1.3">使用自己的服务器</a></li>
-<li><a href="#toc_0.1.4">定义手动推送的快捷键</a></li>
 </ul>
 <li><a href="#toc_0.2">Linux下的解决方案</a></li>
 </ul>
@@ -74,7 +73,7 @@
 看了上面的需求分析，相信大家想到的都是各自版本管理工具。那就来试试时下最火的 git 吧！
 </p>
 
-<h3 id="toc_0.1.1">使用 Git + Batch file</h3>
+<h3 id="toc_0.1.1">使用 Git + Batch file/VBS</h3>
 <p>
 要使用 git ，可以选择自建 git server ，或者使用 github 的 public repository 。
 </p>
@@ -88,50 +87,68 @@
 </p>
 
 <p>
-接下来就要想办法让本地目录定时自动 <code>push</code> 到 github ， Web服务器上的www目录也要定时从 github 上 <code>checkout</code> 。既然要使用公开的git仓库，就绕不开用户验证。在Windows下的最好的解决方案是使用 <code>msysgit</code> ，相信会用 Git 的人都已经按照<a href="http://help.github.com/msysgit-key-setup/">Github上的指导</a>建立了 ssh key 。但不知道你试过 ssh-agent 这个东西没有？简单来说，它可以让你不用每次提交修改到 git
-服务器时都输入密码。请参照这篇教程进行设置：<a href="http://help.github.com/working-with-key-passphrases/">http://help.github.com/working-with-key-passphrases/</a>
+接下来就要想办法让本地目录定时自动 <code>push</code> 到 github ， Web服务器上的www目录也要定时从 github 上 <code>checkout</code> 。既然要使用公开的git仓库，就绕不开用户验证。在Windows下的最好的解决方案是使用 <strong>msysgit</strong> ，相信会用 Git 的人都已经按照<a href="http://help.github.com/msysgit-key-setup/">Github上的指导</a>建立了 ssh key 。但不知道你试过 ssh-agent 这个东西没有？简单来说，它可以让你不用每次提交修改到 git
+服务器时都输入密码。请参照这篇教程进行设置：<a href="http://help.github.com/working-with-key-passphrases/">http://help.github.com/working-with-key-passphrases/</a> 。
 </p>
 
 <p>
-然后写一段批处理脚本，自动完成 commit, push 等操作。把下面的文件另存为 sync.bat ，放到 vimwiki_html 目录下。如果你乐意，还可以在 .gitignore 里添加这个文件，虽然这个文件就算提交上去也无害。
+然后可以写一段批处理脚本，自动完成 commit, push 等操作。但经过本人亲身尝试，虽然 msysgit 可以让 Window 命令行里有 git 命令可以用，却不能在里面享用 ssh-agent 的登录状态，要做到免密码输入，*只能进入到 git bash ，然后用 vbs 模拟键盘输入*。这段 vbs 我是暂时没有能力写出来了。而且就算能写，还牵涉到判断提交是否已经成功的问题，就算我们爱折腾，也要量力而行哈。
 </p>
 
-<pre  class="brush:bat">
+<p>
+所以，一劳永逸的方法还是生成ssh key时不要设置 passphrase 。鉴于这个 key 并不那么容易被泄露，不要 passphrase 是可以接受的。赶快去更新一下你的 ssh key 吧！
+</p>
+
+<p>
+只要可以无人值守地 <code>git push</code> ，就可以使用下面的批处理脚本：
+</p>
+<pre>
 @echo off
 title 通过 Git 同步.. 
-
+::Start...
 echo Start synchronizing...
+
+echo Commit changes...
 
 :: get date and time 
 for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
 for /f "delims=" %%a in ('time/t') do @set mytime=%%a 
 set fvar=%mydate%%mytime% 
 
-echo Commit changes...
-
 :: add all new files 
 call git add . 
 call git commit -a -m "Automated commit on %fvar%"
 
-:: check if ssh-agent is running, if not, open git bash and login.
-tasklist|findstr /i "ssh-agent.exe" || ( 
-    title !!Passphrase needed!! 
-    color 4E
-    echo Please enter ssh passphrase and push manunally 
-    cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
-)
-:: 默认会推送到远程服务器 origin ， master 分支
+:: push to the server. Default in "origin" remote, "master" branch
 call git push
 </pre>
 
 <p>
-然后把这段脚本添加到 Windows 的计划任务里就可以了。或者你不喜欢定时推送，每次有需要时再运行这个脚本也可以（这一步也能有快捷键的）。但现在只是做到了自动推送，网页的显示怎么办呢？
+另存为 sync.bat ，放到 vimwiki_html 目录下。然后将其添加到 Windows 的任务计划程序里，就可以做到定时推送。或者你不喜欢定时推送，每次有需要时再运行这个脚本也可以。来，绑定一个运行此脚本的快捷键。
+</p>
+
+<p>
+鉴于<a href="http://wiki.ktmud.com/tips/vim/vimwiki-guide.html#toc_0.3.3">我们之前定义的生成HTML快捷键是&lt;F4&gt;</a>，那就定义 &lt;C-F4&gt; 为提交好了：
+</p>
+<blockquote>
+map &lt;C-F4&gt; :silent exec '!cmd.exe /k "cd "'.VimwikiGet('path_html').'" &amp; sync"'&lt;cr&gt;
+</blockquote>
+
+<p>
+如果你愿意，还可以把生成与提交一起都做了：
+</p>
+<blockquote>
+map &lt;C-F4&gt; &lt;S-F4&gt;:silent exec '!cmd.exe /k "cd "'.VimwikiGet('path_html').'" &amp; sync"'&lt;cr&gt;
+</blockquote>
+
+
+<p>
+但现在只是做到了自动推送，网页的显示怎么办呢？
 </p>
 
 <p>
 有两种解决方案，使用 github 的 pages ，或者在一个有 shell 权限的服务器上拉取一个 git 仓库副本，然后建立 cronjob 。
 </p>
-
 
 <h3 id="toc_0.1.2">使用 Github Pages</h3>
 <p>
@@ -167,6 +184,10 @@ call git push kwiki master
 <p>
 接着，按照 <a href="http://pages.github.com/">Github Pages 帮助文档</a> 的说明，添加 CNAME ，一切搞定！
 </p>
+
+<p>
+等待， github 页面生成后，会给用户发送提醒邮件。每次同步成功都有这个邮件，多烦人啊，到 <a href="https://github.com/account/notifications">https://github.com/account/notifications</a> 去改一下设置吧！
+</p>
  
 
 <h3 id="toc_0.1.3">使用自己的服务器</h3>
@@ -176,12 +197,16 @@ call git push kwiki master
 
 <ol>
 <li>
-请先阅读<a href="http://progit.org/book/zh/ch4-4.html">Pro Git 上有关架设服务器的文档</a>，按说明操作。重点是把公共 ssh key 拷到服务器上那一步。
+请先阅读<a href="http://progit.org/book/zh/ch4-4.html">Pro Git 上有关架设服务器的文档</a>。
 </li>
 <li>
 然后就可以<a href="http://progit.org/book/zh/ch4-5.html">这样来搞</a>。也可以读一读这篇：<a href="http://toroid.org/ams/git-website-howto">Using Git to manage a web site</a> ，讲的是一回事情。
 </li>
 </ol>
+
+<p>
+在第一篇文章中，重点是把你的 SSH 公钥添加到服务器的 authorized_keys 里。可以参考明城的《[ <a href="http://www.gracecode.com/archives/3030/">http://www.gracecode.com/archives/3030/</a> 我是如此得深爱着 SSH》(额.. 麻~) 这篇文章。至于要不要限制 git 推送用户的 shell 权限，就看你个人选择了。
+</p>
 
 <p>
 比 github pages 简单。
@@ -194,14 +219,12 @@ call git push kwiki master
 <p>
 哇塞，这样子一搞，我们的维基一下子就有三个镜像了！
 </p>
-
-<h3 id="toc_0.1.4">定义手动推送的快捷键</h3>
-<p>
-其实很简单，就是 map 一个快捷键到启动 sync.bat 好了。鉴于<a href="http://wiki.ktmud.com/tips/vim/vimwiki-guide.html#toc_0.3.3">我们之前定义的生成HTML快捷键是&lt;F4&gt;</a>，那就定义 &lt;C-F4&gt; 为提交HTML好了：
-</p>
     
 
 <h2 id="toc_0.2">Linux下的解决方案</h2>
+<p>
+没有了 git bash 的重重限制，写起脚本来应该简单得多。至少不用纠结用 bat 还是 vbs 的问题。这个问题咱以后再议。（因为现在我也搞不懂～ =.= ... ）
+</p>
 </div>
 <div id="footer">
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../../SiteMap.html" title="站点地图">给我一点导航吧</a></p>

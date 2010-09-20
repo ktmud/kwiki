@@ -51,11 +51,12 @@
 </ul>
 <li><a href="#toc_0.5">调教你的 vimwiki</a></li>
 <ul>
-<li><a href="#toc_0.5.1">做一个你自己的模板</a></li>
-<li><a href="#toc_0.5.2">HTML 模板增强</a></li>
+<li><a href="#toc_0.5.1">更改一点默认配置</a></li>
+<li><a href="#toc_0.5.2">做一个你自己的模板</a></li>
+<li><a href="#toc_0.5.3">HTML 模板增强</a></li>
 <ul>
-<li><a href="#toc_0.5.2.1">使footer也可以引用 %root_path%</a></li>
-<li><a href="#toc_0.5.2.2">在wiki里使用更多的HTML标签</a></li>
+<li><a href="#toc_0.5.3.1">使footer也可以引用 %root_path%</a></li>
+<li><a href="#toc_0.5.3.2">在wiki里使用更多的HTML标签</a></li>
 </ul>
 </ul>
 </ul>
@@ -314,13 +315,51 @@ Loading...
 </p>
 
 <h2 id="toc_0.5">调教你的 vimwiki</h2>
+
+<h3 id="toc_0.5.1">更改一点默认配置</h3>
+<p>
+目前我的 vimrc 里有这些内容：
+</p>
+<pre>
+" vimwiki
+
+"     是否在词条文件保存时就输出html  这个会让保存大词条比较慢
+      所以我默认没有启用  有需要的话就把这一行复制到下面去
+"     \ 'auto_export': 1,
+
+" 多个维基项目的配置
+let g:vimwiki_list = [{'path': 'E:/My Dropbox/vimwiki/', 
+      \ 'html_header': 'E:/My Dropbox/Public/vimwiki_template/header.htm',
+      \ 'html_footer': 'E:/My Dropbox/Public/vimwiki_template/footer.htm',
+      \ 'diary_link_count': 5},
+      \{'path': 'Z:\demo\qiuchi\wiki'}]
+
+" 对中文用户来说，我们并不怎么需要驼峰英文成为维基词条
+let g:vimwiki_camel_case = 0
+
+" 标记为完成的 checklist 项目会有特别的颜色
+let g:vimwiki_hl_cb_checked = 1
+
+" 我的 vim 是没有菜单的，加一个 vimwiki 菜单项也没有意义
+let g:vimwiki_menu = ''
+
+" 是否开启按语法折叠  会让文件比较慢
+"let g:vimwiki_folding = 1
+
+" 是否在计算字串长度时用特别考虑中文字符
+let g:vimwiki_CJK_length = 1
+
+" 详见下文...
+let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,del,br,hr,div,code,h1'
+</pre>
+
 <pre>
 <b>警告!</b> 以下为高级内容，虽然我手把手在教，但毕竟折腾耗时。
 而且您的操作可能因为 vimwiki 将来的版本升级而失效。
 请评估自己的时间成本！
 </pre>
 
-<h3 id="toc_0.5.1">做一个你自己的模板</h3>
+<h3 id="toc_0.5.2">做一个你自己的模板</h3>
 <p>
 vimwiki 生成的HTML会都会链接相应vimwiki_html目录下的style.css。如果你不自己指定，它会自动生成一个默认的。CSS禅意花园的境界是什么来着，仅仅修改 style.css 就能拥有风格完全不同的页面。通过简单修改 style.css ，你完全可以创造自己风格的维基站。加上自定义文档头部和尾部的功能，折腾出一个个人网站来绰绰有余。当然，如果你还在想新闻列表，feed订阅什么的，请赶快走开。毕竟， vimwiki 不是 CMS 。
 </p>
@@ -329,9 +368,9 @@ vimwiki 生成的HTML会都会链接相应vimwiki_html目录下的style.css。�
 可惜的是，并不能指定一个 style.css 的模板，如果你还折腾了一些 JavaScript 增强，就更麻烦了。需要的话请自行把相关文件复制过去吧。当然，你也可以直接把本页面另存为，使用我的模板！具体实现请自己折腾。
 </p>
 
-<h3 id="toc_0.5.2">HTML 模板增强</h3>
+<h3 id="toc_0.5.3">HTML 模板增强</h3>
 
-<h4 id="toc_0.5.2.1">使footer也可以引用 %root_path%</h4>
+<h4 id="toc_0.5.3.1">使footer也可以引用 %root_path%</h4>
 
 <p>
 修改 <strong>$VIMFILES/autoload/vimwiki_html.vim</strong> ，第 1169 行
@@ -373,7 +412,7 @@ call map(lines, 'substitute(v:val, "%root_path%", "'.
 复制到第 141 行 <code>let lines = readfile(expand(VimwikiGet('html_footer')))</code> 之后
 </p>
 
-<h4 id="toc_0.5.2.2">在wiki里使用更多的HTML标签</h4>
+<h4 id="toc_0.5.3.2">在wiki里使用更多的HTML标签</h4>
 <p>
 vimwiki 有一个 g:vimwiki_valid_html_tags 值，可以指定允许写在 wiki 中的HTML标签。 g:vimwiki_valid_html_tags 的默认值是 <code>'b,i,s,u,sub,sup,kbd,br,hr'</code> ，也就是说，当你在 wiki 中输入：
 </p>
