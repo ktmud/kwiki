@@ -19,3 +19,4 @@ call git push origin gh-pages
 call git push kwiki gh-pages
 call git push kwiki master
 call git push web master
+exit

@@ -131,7 +131,7 @@ call git push
 鉴于<a href="http://wiki.ktmud.com/tips/vim/vimwiki-guide.html#toc_0.3.3">我们之前定义的生成HTML快捷键是&lt;F4&gt;</a>，那就定义 &lt;C-F4&gt; 为提交好了：
 </p>
 <blockquote>
-map &lt;C-F4&gt; :silent exec '!cmd.exe /k "cd "'.VimwikiGet('path_html').'" &amp; sync"'&lt;cr&gt;
+map &lt;C-F4&gt; :exec '!cmd.exe /k "cd "'.VimwikiGet('path_html').'" &amp; sync"'&lt;cr&gt;
 </blockquote>
 
 <p>
