@@ -12,9 +12,9 @@ set fvar=%mydate%%mytime%
 
 :: add all new files 
 call git add . 
-call git commit -a -m "Automated commit on %fvar%"
+call git commit -a -m "Auto-commit on %fvar%"
 
 call git push origin gh-pages
 call git push kwiki gh-pages
-call git push web master
+call git push web gh-pages 
 exit
