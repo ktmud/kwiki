@@ -1,4 +1,4 @@
-var HOST_ROOT = 'http://wiki.ktmud.com/'
+var root_path = 'http://wiki.ktmud.com/'
 
 var kwiki = kwiki || {};
 
@@ -26,17 +26,17 @@ kwiki.loadCmt = function(provider){
     var thread, extraCSS, theJS;
 
     if( provider == 'disqus' ) { 
-        window.disqus_iframe_css = HOST_ROOT + 'disqus_iframe.css';
+        window.disqus_iframe_css = root_path + 'disqus_iframe.css';
         window.disqus_identifier = window.kwiki_identifier || undefined;
         thread = $('<div id="disqus_thread">');
-        extraCSS = HOST_ROOT + 'disqus.css';
+        extraCSS = root_path + 'disqus.css';
         theJS = 'http://kwiki.disqus.com/embed.js';
     } else if( provider == 'intensedebate'){
         window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
         window.idcomments_post_id = kwiki_identifier;
         window.idcomments_post_url = undefined;
         thread = $('<div id="idc-container"><span class="startloading">Loading comments..<span></div>');
-        //extraCSS = HOST_ROOT + 'intensedebate.css';
+        //extraCSS = root_path + 'intensedebate.css';
         theJS = 'http://www.intensedebate.com/js/genericCommentWrapperV2.js';
     } else {
         return;
@@ -109,7 +109,7 @@ $(document).ready(function(){
 
     //Google自定义搜索
     $.getScript('http://www.google.com/jsapi', function(){
-        kwiki.insertCSS(HOST_ROOT+'cse.css');
+        kwiki.insertCSS(root_path+'cse.css');
         google.load('search', '1', {language : 'zh-CN', 'callback': cseloaded });
     });
 
