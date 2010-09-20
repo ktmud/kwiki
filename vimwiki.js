@@ -109,7 +109,11 @@ $(document).ready(function(){
 
     //Google自定义搜索
     $.getScript('http://www.google.com/jsapi', function(){
-        kwiki.insertCSS(root_path+'cse.css');
+        if( $.browser.msie ){
+            kwiki.insertCSS(root_path+'cse.css');
+        } else {
+            kwiki.getCSS(root_path+'cse.css');
+        }
         google.load('search', '1', {language : 'zh-CN', 'callback': cseloaded });
     });
 
