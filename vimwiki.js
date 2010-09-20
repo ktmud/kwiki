@@ -1,4 +1,4 @@
-var root_path = 'http://wiki.ktmud.com/'
+var HOST_ROOT = 'http://wiki.ktmud.com/'
 
 var kwiki = kwiki || {};
 
