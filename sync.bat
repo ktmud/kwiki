@@ -22,3 +22,6 @@ tasklist|findstr /i "ssh-agent.exe" || (
     cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
 )
 call git push origin master
+call git push origin gh-pages
+call git push kwiki gh-pages
+call git push kwiki master
