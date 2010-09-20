@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>你要怎么同步你的 vimwiki ?  - 丘迟的维基世界</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../../style.css" />
+<script> var kwiki_identifier = 'wiki_../../_你要怎么同步你的 vimwiki ?  - 丘迟的维基世界'; </script>
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../../tips/index.html">经验总结</a>
+		</li>
+		<li>
+			<a href="../../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<p>
+<h1>同步 vimwiki 到线上的各种方法</h1>
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Windows下的解决方案</a></li>
+<ul>
+<li><a href="#toc_0.1.1">使用 Git + Batch file</a></li>
+<li><a href="#toc_0.1.2">使用 Github Pages</a></li>
+<li><a href="#toc_0.1.3">使用自己的服务器</a></li>
+</ul>
+<li><a href="#toc_0.2">Linux下的解决方案</a></li>
+</ul>
+</ul>
+</div>
+由于 vimwiki 需要手动生成静态 HTML ，如果你想发布 ，就需要把这些HTML都传到线上去。传文件很麻烦啊，有没有省事儿点的办法呢。抽点时间来写同步脚本吧，长痛不如短痛。
+</p>
+
+<p>
+首先分析一下这个同步需求：
+</p>
+<ol>
+<li>
+需要自动同步 vimwiki_html 的所有文件
+</li>
+<li>
+有变更的文件才同步上去
+</li>
+<li>
+被删掉的文件也要能同步删掉
+</li>
+<li>
+由于文件修改频繁，不需要一旦修改就马上同步
+</li>
+<li>
+有需要时可以手动同步
+</li>
+<li>
+最好能排除一些不用放在线上的文件
+</li>
+<li>
+不能占用太多系统资源
+</li>
+</ol>
+
+<h2 id="toc_0.1">Windows下的解决方案</h2>
+
+<p>
+看了上面的需求分析，相信大家想到的都是各自版本管理工具。那就来试试时下最火的 git 吧！
+</p>
+
+<h3 id="toc_0.1.1">使用 Git + Batch file</h3>
+<p>
+要使用 git ，可以选择自建 git server ，或者使用 github 的 public repository 。
+</p>
+
+<p>
+先说用 github 的情况。首先<a href="http://github.com/repositories/new">新建一个仓库</a>，我这里使用的项目名是 <strong>kwiki</strong> 。获得SSH地址 <code>git@github.com:ktmud/kwiki.git</code> 。
+</p>
+
+<p>
+接着把 vimwiki_html 文件夹初始化为 git 项目， <code>push</code> 到 github 上去。
+</p>
+
+<p>
+接下来就要想办法让本地目录定时自动 <code>push</code> 到 github ， Web服务器上的www目录也要定时从 github 上 <code>checkout</code> 。既然要使用公开的git仓库，就绕不开用户验证。在Windows下的最好的解决方案是使用 <code>msysgit</code> ，相信会用 Git 的人都已经按照<a href="http://help.github.com/msysgit-key-setup/">Github上的指导</a>建立了 ssh key 。但不知道你试过 ssh-agent 这个东西没有？简单来说，它可以让你不用每次提交修改到 git
+服务器时都输入密码。请参照这篇教程进行设置：<a href="http://help.github.com/working-with-key-passphrases/">http://help.github.com/working-with-key-passphrases/</a>
+</p>
+
+<p>
+然后写一段批处理脚本，自动完成 commit, push 等操作。把下面的文件另存为 sync.bat ，放到 vimwiki_html 目录下。如果你乐意，还可以在 .gitignore 里添加这个文件，虽然这个文件就算提交上去也无害。
+</p>
+
+<pre  class="brush:bat">
+@echo off
+title 通过 Git 同步.. 
+
+echo Start synchronizing...
+
+:: get date and time 
+for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
+for /f "delims=" %%a in ('time/t') do @set mytime=%%a 
+set fvar=%mydate%%mytime% 
+
+echo Commit changes...
+
+:: add all new files 
+call git add . 
+call git commit -a -m "Automated commit on %fvar%"
+
+:: check if ssh-agent is running, if not, open git bash and login.
+tasklist|findstr /i "ssh-agent.exe" || ( 
+    title !!Passphrase needed!! 
+    color 4E
+    echo Please enter ssh passphrase and push manunally 
+    cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
+)
+:: 默认会推送到远程服务器 origin ， master 分支
+call git push
+</pre>
+
+<p>
+然后把这段脚本添加到 Windows 的计划任务里就可以了。但现在只是做到了自动推送，网页的显示怎么办呢？有两种解决方案，使用 github 的 pages ，或者在一个有 shell 权限的服务器上拉取一个 git 仓库副本，然后建立 cronjob 。
+</p>
+
+<p>
+以下内容主要参考了：
+</p>
+<ol>
+<li>
+<a href="http://pages.github.com/">Github Pages 教程</a>
+</li>
+<li>
+<a href="http://toroid.org/ams/git-website-howto">Using Git to manage a web site</a>
+</li>
+</ol>
+
+<h3 id="toc_0.1.2">使用 Github Pages</h3>
+<p>
+很爽的是，github 不仅提供 pages ，还提供 CNAME 功能，可以用你自己的域名访问 github pages 。 我们的目的是建立一个 wiki.yourname.com 的根域名。于是，不可避免地，咱要新建一个帐号才行。
+</p>
+
+<h3 id="toc_0.1.3">使用自己的服务器</h3>
+
+
+
+<h2 id="toc_0.2">Linux下的解决方案</h2>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>
