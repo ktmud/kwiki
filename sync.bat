@@ -1,4 +1,5 @@
 @echo off
+color 30
 title 通过 Git 同步.. 
 ::Start...
 echo Start synchronizing...
@@ -15,5 +16,7 @@ call git add .
 call git commit -a -m "Automated commit on %fvar%"
 
 :: check if ssh-agent is running, if not, open git bash and login.
-tasklist|findstr /i "ssh-agent.exe" || cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
+tasklist|findstr /i "ssh-agent.exe" || title "Passphrase needed." 
+    \ && echo "Please enter ssh passphrase and push manunally" 
+    \ && cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
 call git push origin master
