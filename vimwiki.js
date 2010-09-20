@@ -1,0 +1,148 @@
+var HOST_ROOT = 'http://wiki.ktmud.com/'
+
+var kwiki = kwiki || {};
+
+kwiki.getCSS = function(url){
+    var tag = '<link rel="stylesheet" href="'+url+'" />'
+    $('body').append(tag);
+}
+
+kwiki.insertCSS = function(url){
+    $.get(url, function(res){
+        var tag = '<style>'+res+'</stle>'
+        $('body').append(tag);
+    });
+}
+
+kwiki.insertScript = function(url, bottle){
+    var tag = '<script src='+url+'></script>';
+    if(!bottle) bottle = 'head';
+    $(bottle).append(tag);
+}
+
+kwiki.loadCmt = function(provider){
+    if( $('#no-comment').length > 0 ) return;
+
+    var thread, extraCSS, theJS;
+
+    if( provider == 'disqus' ) { 
+        window.disqus_iframe_css = HOST_ROOT + 'disqus_iframe.css';
+        window.disqus_identifier = window.kwiki_identifier || undefined;
+        thread = $('<div id="disqus_thread">');
+        extraCSS = HOST_ROOT + 'disqus.css';
+        theJS = 'http://kwiki.disqus.com/embed.js';
+    } else if( provider == 'intensedebate'){
+        window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
+        window.idcomments_post_id = kwiki_identifier;
+        window.idcomments_post_url = undefined;
+        thread = $('<div id="idc-container"><span class="startloading">Loading comments..<span></div>');
+        //extraCSS = HOST_ROOT + 'intensedebate.css';
+        theJS = 'http://www.intensedebate.com/js/genericCommentWrapperV2.js';
+    } else {
+        return;
+    }
+
+    $('#main').append(thread);
+
+    var win = $(window);
+
+    function load() {
+        if( win.scrollTop() + win.height() > thread.offset().top - 100 ){
+
+            if(extraCSS) kwiki.getCSS(extraCSS);
+
+            $.getScript(theJS,function(){
+                setTimeout(function(){
+                    $('iframe').attr('allowtransparency', true);
+                }, 2000);
+            });
+
+            win.unbind('scroll');
+        }
+    }
+
+    win.bind('scroll', load);
+    load();
+}
+
+$(document).ready(function(){
+    if ( window.innerWidth >= 460 ) {
+        var toggler = $('<div class="toggler" title="点击展开/收起">目录</div>'),
+        toc = $('.toc');
+        toc.wrap('<div class="tocWrap">');
+
+        $('.tocWrap').prepend(toggler)
+        .delay(500)
+        .fadeTo(500, '0.25')
+        .hover(function(){
+            $(this).stop().fadeTo(300,'0.9')
+        }, function(){ 
+            $(this).stop().fadeTo(300,'0.25')
+        });
+
+        toggler.click(function(){
+            $('div.toc').slideToggle(300);
+        });
+    }
+
+    //外链处理
+    $('a[href]').each(function(){
+        if( this.href.indexOf( window.location.host ) == -1) $(this).attr({target: '_blank', title: this.href });
+    });
+
+    $('a[href^=#][href!=#]').click(function(){
+
+        var target = document.getElementById( this.hash.slice(1) );
+
+        if( !target ) return;
+
+        var targetOffset = $(target).offset().top;
+        $('html,body').animate({scrollTop: targetOffset}, 400);
+
+        return false;
+    })
+
+    //lesser
+    $('div.lesser .hd').click(function(){ $(this).next().slideToggle(300); });
+
+    //把< 转为html实体>
+
+    //Google自定义搜索
+    $.getScript('http://www.google.com/jsapi', function(){
+        kwiki.insertCSS(HOST_ROOT+'cse.css');
+        google.load('search', '1', {language : 'zh-CN', 'callback': cseloaded });
+    });
+
+    function cseloaded() {
+        var customSearchControl = new google.search.CustomSearchControl('013996024720219627519:n_9lss7xao0');
+        customSearchControl.setResultSetSize(5);
+        customSearchControl.setNoResultsString('哎哟喂，找不到这个东东呢……');
+
+        var options = new google.search.DrawOptions();
+        options.setAutoComplete(true);
+        customSearchControl.draw('cse');
+
+        var input = document.querySelector('input.gsc-input');
+        input.style.cssText = '';
+        input.className = 'gsc-input cesbg';
+        input.onfocus = function(){
+            if( input.className.indexOf('cesbg') >= 0 ) input.className = 'gsc-input';
+        };
+        input.onblur = function(){
+            if(input.value=='') input.className = 'gsc-input cesbg';
+        };
+    };
+
+    //评论
+    if( !$.browser.msie ) kwiki.loadCmt('disqus');
+
+    //统计信息
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1080811-17']);
+    _gaq.push(['_trackPageview']);
+
+    $.getScript('http://www.google-analytics.com/ga.js');
+
+
+    });
+
