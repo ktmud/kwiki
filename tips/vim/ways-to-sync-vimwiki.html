@@ -165,7 +165,7 @@ map &lt;C-F4&gt; &lt;S-F4&gt;:exec 'silent !cmd.exe /k "cd "'.VimwikiGet('path_h
 </ol>
 
 <p>
-很爽的是，github 不仅提供 pages ，还提供 CNAME 功能，可以用你自己的域名访问 github pages 。 我们的目的是把 wiki 放在 wiki.yourname.com 的根目录下，而不是以仓库名命名的子目录。于是，不可避免地，需要新建一个帐号才行。看起来，新帐号似乎需要新的 ssh key 才能提交更改，其实是不必的。我们不用这个新帐号做 git push 就可以了。使用新帐号登录，在“管理员”页面（右上角搜索框的下面有链接）把你的主帐号添加为协作者，这样本地就能继续使用主帐号的ssh key登录，在做 push 也不会提示权限不足了。
+很爽的是，github 不仅提供 pages ，还提供 CNAME 功能，可以用你自己的域名访问 github pages 。 我们的目的是把 wiki 放在 wiki.yourname.com 的根目录下，而不是以仓库名命名的子目录。于是，不可避免地，需要新建一个帐号才行。看起来，新帐号似乎需要新的 ssh key 才能提交更改，其实是不必的。我们不用这个新帐号做 git push 就可以了。使用新帐号登录，在“管理员”页面（右上角搜索框的下面有链接）把你的主帐号添加为协作者，这样本地就能继续使用主帐号的ssh key登录，再 push 的时候就不会提示权限不足了。
 </p>
 
 <p>
@@ -173,7 +173,7 @@ map &lt;C-F4&gt; &lt;S-F4&gt;:exec 'silent !cmd.exe /k "cd "'.VimwikiGet('path_h
 </p>
 
 <p>
-OK，现在耐心等待 github 为你生成 pages 。因为添加了一个 remote ，刚才那个 sync.bat 也要改一下了。把最后两行改为：
+OK，现在耐心等待 github 为你生成 pages 。因为添加了一个 remote ，刚才那个 sync.bat 也要改一下了，最后两行改为：
 </p>
 <pre>
 call git push origin gh-pages
@@ -189,9 +189,20 @@ exit
 </p>
 
 <p>
-等待， github 页面生成后，会给用户发送提醒邮件。每次同步成功都有这个邮件，多烦人啊，到 <a href="https://github.com/account/notifications">https://github.com/account/notifications</a> 去改一下设置吧！
+等等， github 页面生成后，会给用户发送提醒邮件。每次同步成功都有这个邮件，多烦人啊，到 <a href="https://github.com/account/notifications">https://github.com/account/notifications</a> 去改一下设置吧！
 </p>
  
+<p>
+事实上，现在你本地的 master 分支已经可以删除了。在本地运行 <code>git branch -D master</code> 即可。至于 github 上的 master ，是让它在那儿晾着呢还是让它晾着呢？
+</p>
+
+<p>
+事实上 again ，为了让项目更有意义，这个 master 应该是 vimwiki 的模板文件、js、css什么的。 gh-pages 应该是项目的附属页面，而不是项目本身。
+</p>
+
+<p>
+Anyway, 老子这个项目就是让 wiki 作为项目本身，怎么着？好吧，那我们就还要到 github 的管理员界面里去修改默认分支。
+</p>
 
 <h3 id="toc_0.1.3">使用自己的服务器</h3>
 <p>
@@ -233,6 +244,7 @@ $ git push web +master:refs/heads/master
 <p>
 完成了上面那篇英文教程里的操作，你服务器上应该就有了一个 master 分支。现在我们把本地的 gh-pages 也给推送上去吧。然后再到服务器上把主分支切换为 gh-pages ，这样你的整个 web site 才会真的可用。
 </p>
+
 
 
 <h2 id="toc_0.2">Linux下的解决方案</h2>
