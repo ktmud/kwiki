@@ -20,15 +20,16 @@
 
 <hr />
 == 重点推荐 ==
-现在你可以[http://github.com/ktmud/kwiki/commits/master/ 通过 GitHub 订阅本站的更新]啦！只要你愿意，还可以[http://github.com/ktmud/kwiki/commits/master.atom 点此订阅RSS]哦。
+现在你可以[http://github.com/ktmud/kwiki/commits/master/ 通过 GitHub ]订阅本站的更新了！只要你愿意，还可以[http://github.com/ktmud/kwiki/commits/master.atom 点此订阅RSS]！
 
+=== 原创教程 ===
 # [[tips/vim/vimwiki-guide|使用vimwiki搭建你自己的维基世界]]
 # [[tips/vim/ways-to-sync-vimwiki|自动同步你的 vimwiki 到线上网站]]
 
 <hr />
 
-== 爱心小贴士 ==
-楼主目前从事前端开发方面的工作，我会在这里记录一些[[tips/index|工作经验的积累]]。也记录一些需要时常参考的东西。比较重要的内容，会整理成博客，发在 ktmud.com 上，如果您觉得这东西对你还算有用，就赶快订阅 http://ktmud.com/feed/ 吧。
+== 前端攻城策略 ==
+楼主目前从事前端开发方面的工作，这个维基里会记录一些[[tips/index|工作经验的积累]]。也记录一些需要时常参考的东西。比较重要的内容，会整理成博客，发在[http://ktmud.com 亲泥巴]这个博客上。
 
 * [[tips/JavaScript|JavaScript]]
 * [[tips/CSS|CSS]]
@@ -56,7 +57,7 @@
 ==== 楼主到底是谁？ ====
 多年以来，一直没有一个叫得顺口的网名，不能不说是一种遗憾啊。姑且还是叫我 丘迟 吧。
 
-* [[Blogs|博客]]
+* [[Blogs|各种博客]]
 * [http://www.douban.com/people/jyyjcc 豆瓣]
 * [http://www.renren.com/jyyjcc 人人]
 
@@ -70,4 +71,4 @@
 - 当然，在 IE 这个很戳的浏览器里是不能评论的。
 - 右上角搜索的结果还不完全。这是Google对本站索引太慢造成的。如果你希望有更强力的搜索，就赶快给俺加个友链吧！
 
-%title 欢迎来到丘迟的维基世界 - ktmud wiki - powered by VimWiki
+%title 欢迎来到丘迟的维基世界 - a site build with Vim, Vimwiki and Git
