@@ -27,7 +27,7 @@ kwiki.loadCmt = function(provider){
     var thread, extraCSS, theJS;
 
     if( provider == 'disqus' ) { 
-        window.disqus_iframe_css = root_path + 'disqus_iframe.css';
+        window.disqus_iframe_css = HOST_ROOT + 'disqus_iframe.css';
         window.disqus_identifier = window.kwiki_identifier || undefined;
         thread = $('<div id="disqus_thread">');
         extraCSS = root_path + 'disqus.css';
