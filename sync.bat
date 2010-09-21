@@ -19,4 +19,11 @@ if not {%cmsg%}=={} set cmsg=%cmsg% -
 call git commit -a -m "%cmsg%%date%"
 cls
 echo 开始推送到github/ktmud/kwiki/...
-call git push origin master
+call git push origin
+cls
+echo 开始推送到kwiki
+call git push kwiki
+cls
+echo 开始推送到Web
+call git push web 
+exit
