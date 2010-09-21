@@ -17,5 +17,7 @@ call git add .
 Set /p cmsg=请输入Commit注释（留空则为提交时间）: 
 if not {%cmsg%}=={''} set msg=%cmsg%
 call git commit -a -m "%msg% - %mydate%"
-
+cls
+echo 开始推送...
 call git push origin master
+exit
