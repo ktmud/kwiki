@@ -14,7 +14,7 @@ call git add .
 
 :: 请求输入 commit 消息
 Set /p cmsg=请输入Commit注释（留空则为提交时间）: 
-if not {%cmsg%}=={''} set cmsg=%cmsg% - 
+if not {%cmsg%}=={} set cmsg=%cmsg% - 
 call git commit -a -m "%cmsg%%date%"
 cls
 echo 开始推送到github/ktmud/kwiki/...
