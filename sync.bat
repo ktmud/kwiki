@@ -16,10 +16,10 @@ call git add .
 Set /p cmsg=请输入Commit注释（留空则为提交时间）: 
 :: bat语法实在是太戳了
 call git commit -a -m "%cmsg%_%date%"
-echo 开始推送到github/ktmud/kwiki/...
-call git push origin
-echo 开始推送到kwiki
-call git push kwiki
+REM echo 开始推送到github/ktmud/kwiki/...
+REM call git push origin
+REM echo 开始推送到kwiki
+REM call git push kwiki
 echo 开始推送到Web
 call git push web 
 exit
