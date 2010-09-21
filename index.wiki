@@ -61,7 +61,7 @@
 <hr>
 == 其他 ==
 - [[Links|友情链接]]
-- [[Refference|阅读推荐]]
+- [[ReadIt|阅读推荐]]
 
 == 各种注意 ==
 - 本页面支持评论，基于[http://www.diqus.com DISQUS]实现。但DISQUS有时候实在慢得可以，评论输入框里居然还有iframe。各位如果恰巧不幸赶上DISQUS抽风，又正好想留言的话，还望多一点耐心。
