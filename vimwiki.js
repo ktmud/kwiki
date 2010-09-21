@@ -1,4 +1,5 @@
-var HOST_ROOT = 'http://wiki.ktmud.com/'
+var HOST_ROOT = 'http://wiki.ktmud.com/',
+kwiki_identifier = 'wiki' + window.location.pathname.replace('/','_').replace('index.html','home').replace('.html','');
 
 var kwiki = kwiki || {};
 

@@ -5,9 +5,7 @@
 <title>404 - 找不到</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="Stylesheet" type="text/css" href="style.css" />
-<script type="text/javascript">
-    var disqus_identifier = 'wiki__404', root_path = '';
-</script>
+<script> var disqus_identifier = 'wiki_404', root_path = ''; </script>
 </head>
 <body>
 <div id="all">
@@ -36,7 +34,7 @@
 </p>
 </div>
 <div id="footer">
-    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="/SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="SiteMap.html" title="站点地图">给我一点导航吧</a></p>
 </div>
 </div>
 <script src="jquery-1.4.2.min.js" type="text/javascript"></script>

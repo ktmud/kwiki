@@ -4,7 +4,8 @@
 <title>丘迟的维基世界 - Vim 小贴士</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="Stylesheet" type="text/css" href="../style.css" />
-<script> var kwiki_identifier = 'wiki_../_丘迟的维基世界 - Vim 小贴士', root_path = '../'; </script>
+<script>var root_path = '../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
 </head>
 <body>
 <div id="all">
@@ -14,7 +15,7 @@
 			<a href="../index.html">首页</a>
 		</li>
 		<li>
-			<a href="../tips/index.html">经验总结</a>
+			<a href="../tips/">经验总结</a>
 		</li>
 		<li>
 			<a href="../diary/diary.html">日记</a>
@@ -28,20 +29,27 @@
 <ul>
 <li><a href="#toc_1">Vim</a></li>
 <ul>
-<li><a href="#toc_1.1">你知道吗？</a></li>
+<li><a href="#toc_1.1">教程</a></li>
+<li><a href="#toc_1.2">你知道吗？</a></li>
 <ul>
-<li><a href="#toc_1.1.1">Vim7.3 的持久撤销</a></li>
+<li><a href="#toc_1.2.1">Vim7.3 的持久撤销</a></li>
 </ul>
-<li><a href="#toc_1.2">颤抖吧！IDE！</a></li>
-<li><a href="#toc_1.3">教程</a></li>
+<li><a href="#toc_1.3">颤抖吧！IDE！</a></li>
 </ul>
 </ul>
 </div>
-<p>
-整理好的内容在<a href="http://ktmud.com/tag/vim/">千吨泥博客</a>上有得看。
-</p>
 
-<h2 id="toc_1.1">你知道吗？</h2>
+<h2 id="toc_1.1">教程</h2>
+<ol>
+<li>
+<a href="vim/vimwiki-guide.html">用Vimwiki建一个维基世界</a>
+</li>
+<li>
+<a href="vim/ways-to-sync-vimwiki.html">自动同步你的 vimwiki 到线上网站</a>
+</li>
+</ol>
+
+<h2 id="toc_1.2">你知道吗？</h2>
 <ol>
 <li>
 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
@@ -51,7 +59,7 @@
 </li>
 </ol>
 
-<h3 id="toc_1.1.1">Vim7.3 的持久撤销</h3>
+<h3 id="toc_1.2.1">Vim7.3 的持久撤销</h3>
 <p>
 Vim 7.3 提供 <strong>持久撤销</strong> (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
 </p>
@@ -70,17 +78,7 @@ set undolevels=1000 "maximum number of changes that can be undone
 </p>
 
 
-<h2 id="toc_1.2">颤抖吧！IDE！</h2>
-
-<h2 id="toc_1.3">教程</h2>
-<ol>
-<li>
-<a href="vim/vimwiki-guide.html">用Vimwiki建一个维基世界</a>
-</li>
-<li>
-<a href="vim/ways-to-sync-vimwiki.html">自动同步你的 vimwiki 到线上网站</a>
-</li>
-</ol>
+<h2 id="toc_1.3">颤抖吧！IDE！</h2>
 </div>
 <div id="footer">
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
