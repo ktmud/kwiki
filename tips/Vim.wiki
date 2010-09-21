@@ -1,0 +1,27 @@
+= Vim =
+%toc
+
+== 教程 ==
+# [[vim/vimwiki-guide|用Vimwiki建一个维基世界]]
+# [[vim/ways-to-sync-vimwiki|自动同步你的 vimwiki 到线上网站]]
+
+== 你知道吗？ ==
+# 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
+# 把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( `C:\Program Files\Git\share\vim` )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
+
+=== Vim7.3 的持久撤销  ===
+Vim 7.3 提供 *持久撤销* (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
+{{{
+" 重启后撤销历史可用 persistent undo 
+set undofile
+set undodir=$VIMFILES/\_undodir
+set undolevels=1000 "maximum number of changes that can be undone
+}}}
+*set undofile* - 开启本功能。开启之后会默认在文件当前目录下建立一个 filename.ext.un~ 的文件，自然是会给我们带来麻烦的。所以配置一个 undodir 集中放置所有undofile。
+
+*$VIMFILES/\_undodir* - $VIMFILES 是我们之前在 vimrc 中定义的环境变量， windows 下是 $VIM/vimfiles/ 。请注意，为了和其他目录区分，undodir前面有下划线 _undodir 。因为有下划线，前面的反斜杠又不可少了。而且这个目录必须自己手动建立。如果不存在，Vim 是不会帮你自动建立的。
+
+
+== 颤抖吧！IDE！ ==
+
+%title 丘迟的维基世界 - Vim 小贴士

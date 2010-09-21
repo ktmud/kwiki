@@ -1,0 +1,28 @@
+= 链接 =
+本人不做友链好多年。
+
+== 必读 ==
+每篇文章都需要看懂。
+
+# [http://lifesinger.org/blog/ 岁月如歌] - 玉伯. 淘宝开源框架[http://github.com/kissyteam/kissy KISSY]主要作者
+# [http://www.gracecode.com 小电灯] - 明城. 前淘宝网前端工程师
+# [http://yiminghe.javaeye.com/ {focus: web}] - 承玉. 淘宝网前端架构组成员
+# [http://www.uedmagazine.com/ued/ UED Mag.] - 拔赤. 淘宝网北京团队前端工程师
+# [http://www.silverna.org/blog/ 十年踪迹] - 月影
+
+== 选读 ==
+每篇文章应该看懂，但又经常被标记为RIL的。
+
+# [http://iregex.org/ 我爱正则表达式]
+# [http://www.cnblogs.com/bluedream2009/ Blue Dream] - JavaScript必知必会Snippets
+# [http://www.cnblogs.com/cloudgamer/ cloudgamer] - 同上
+
+== 重构/前端界 同辈 ==
+
+# [http://avenirzheng.net 郑焕义] - 腾讯
+# [http://blog.allenm.me/ 阿伦孟] - 阿里B2B
+# [http://xiebiji.com/ 小Joe] - 腾讯
+# [http://bu-anjing.com/ 白纸] - 腾讯
+
+
+%title 丘迟的维基世界 - 友情链接

@@ -1,0 +1,18 @@
+= 站点地图 =
+
+    * 如果您是搞前端的
+      * [[tips/JavaScript|JavaScript]]
+      * [[tips/CSS|CSS]]
+    * 如果您还喜欢装逼
+      * [[tips/Vim|Vim]]
+      * [[tips/Linux|Linux]]
+    * 如果您想了解丘迟同学
+      * [[diary/diary|偷看他的日记]]
+      * [[Blogs|去看看他的博客]]
+
+
+{{{id="no-comment"
+本页不允许评论
+}}}
+
+%title 丘迟的维基 - 站点地图

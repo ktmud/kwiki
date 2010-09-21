@@ -12,13 +12,6 @@ set fvar=%mydate%%mytime%
 
 :: add all new files 
 call git add . 
-call git commit -a -m "Automated commit on %fvar%"
+call git commit -a -m "%fvar%"
 
-:: check if ssh-agent is running, if not, open git bash and login.
-tasklist|findstr /i "ssh-agent.exe" || ( 
-    title !!Passphrase needed!! 
-    color 4E
-    echo Please enter ssh passphrase and push manunally 
-    cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i"
-)
 call git push origin master

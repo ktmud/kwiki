@@ -1,0 +1,13 @@
+= 温馨而有爱的小贴士 =
+    帮助您更好地写程序哦
+    
+== 前端开发 ==
+* [[JavaScript|JavaScript]]
+* [[CSS|CSS]]
+
+== 卓有成效的程序员 ==
+* [[Linux|Linux]]
+* [[Vim|Vim]]
+
+
+%title 丘迟的维基 - 编程小贴士

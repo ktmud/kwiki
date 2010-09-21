@@ -1,0 +1,146 @@
+<h1>同步 vimwiki 到线上的各种方法</h1>
+%toc
+由于 vimwiki 需要手动生成静态 HTML ，如果你想发布 ，就需要把这些HTML都传到线上去。传文件很麻烦啊，有没有省事儿点的办法呢。抽点时间来写同步脚本吧，长痛不如短痛。
+
+首先分析一下这个同步需求：
+# 需要自动同步 vimwiki_html 的所有文件
+# 有变更的文件才同步上去
+# 被删掉的文件也要能同步删掉
+# 由于文件修改频繁，不需要一旦修改就马上同步
+# 有需要时可以手动同步
+# 最好能排除一些不用放在线上的文件
+# 不能占用太多系统资源
+
+看了上面的需求分析，相信大家想到的都是各种版本管理工具。那就来试试时下最火的 git 吧！
+
+== 使用 Git + Batch file ==
+{{{
+注意: 下文主要以 Windows 下的操作为例， Linux 下还要简单得多。而且相信用 Linux 的人也不用我教。
+}}}
+
+要使用 git ，不管是自建 git server ，还是使用 github 的 public repository 。都需要先解决自动提交的问题。
+
+=== 自动提交文件到 Git Server ===
+先说用 github 的情况。首先[http://github.com/repositories/new 新建一个仓库]，我这里使用的项目名是 *kwiki* 。获得SSH地址 `git@github.com:ktmud/kwiki.git` 。
+
+接着把 vimwiki_html 文件夹初始化为 git 项目， `push` 到 github 上去。
+
+接下来就要想办法做到自动提交。首先绕不开的问题就是用户验证。相信会用 Git 的人都已经按照[http://help.github.com/msysgit-key-setup/ Github上的指导]建立了 ssh key 。但不知道你试过 ssh-agent 这个东西没有？简单来说，它可以让你不用每次提交修改到 git
+服务器时都输入密码。请参照这篇教程进行设置：http://help.github.com/working-with-key-passphrases/ 。
+
+然后写一段批处理脚本，自动完成 commit, push 等操作。但经过本人亲身尝试，虽然 msysgit 可以让 Window 命令行里有 git 命令可以用，却不能在里面享用 ssh-agent 的登录状态，要做到免密码输入， *只能进入到 git bash ，然后用 vbs 模拟键盘输入* 。这段 vbs 我是暂时没有能力写出来了。而且就算能写，还牵涉到判断提交是否已经成功的问题，就算我们爱折腾，也要量力而行哈。
+
+所以，一劳永逸的方法还是生成ssh key时不要设置 passphrase 。鉴于这个 key 并不那么容易被泄露，不要 passphrase 还是可以接受的。忘了怎么generate SSH key了？看这里： http://help.github.com/msysgit-key-setup/
+
+只要可以无人值守地 `git push` ，我们就可以用到 Windows 的批处理脚本了：
+{{{
+@echo off
+title 通过 Git 同步.. 
+::Start...
+echo Start synchronizing...
+
+echo Commit changes...
+
+:: get date and time 
+for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
+for /f "delims=" %%a in ('time/t') do @set mytime=%%a 
+set fvar=%mydate%%mytime% 
+
+:: add all new files 
+call git add . 
+call git commit -a -m "Automated commit on %fvar%"
+
+:: push to the server. Default in "origin" remote, "master" branch
+call git push
+exit
+}}}
+
+另存为 sync.bat ，放到 vimwiki_html 目录下。然后将其添加到 Windows 的任务计划程序里，就可以做到定时推送。或者你不喜欢定时推送，每次有需要时再运行这个脚本也可以。来，绑定运行此脚本的快捷键——
+
+鉴于[http://wiki.ktmud.com/tips/vim/vimwiki-guide.html#toc_0.3.3 我们之前定义的生成HTML快捷键是<F4>]，那就定义 <C-F4> 为提交好了：
+    map <C-F4> :exec 'silent !cmd.exe /k "cd "'.VimwikiGet('path_html').'" & sync"'<cr>
+
+这个命令会执行当前 vimwiki 的 html 路径下的 sync.bat 脚本。必须等 push 操作都结束后才会返回 vim 界面。
+
+如果你愿意，还可以把生成与提交一起做了：
+    map <C-F4> <S-F4>:exec 'silent !cmd.exe /k "cd "'.VimwikiGet('path_html').'" & sync"'<cr>
+
+有点囧的是，关闭程序的快捷键是<M-F4>（Alt+F4），如此定义之后，有时候容易按错。
+
+当然，因为 msysgit 的 Git Bash 是模拟了 Linux ，我们可以写一些基于Linux语法的bash脚本，让Git Bash启动后自动 commit 和 push 。但是勒，你怎么做到从编辑器里就能调那个脚本？如果真的做成了 git bash 一启动就提交，还有什么灵活性可言？所以啊， Windows 下就用 Windows 的解决方案吧。
+
+那，现在只是做到了自动推送，网页的显示呢？
+
+== 让服务器显示你的的网页 ==
+
+有三种解决方案。1. 使用 github 的 pages ；2. 在一个有 shell 权限的服务器上建立 cronjob ，从 github 上拉取一个 git 仓库副本，www 的 DocumentRoot 定义到仓库目录；3. 把服务器作为 git server ， 本地把文件 push 过去。
+
+=== 使用 Github Pages ===
+*请参考* [http://pages.github.com/ Github Pages 帮助文档]
+
+爽的是，github 不仅提供 pages ，还提供 CNAME 功能，可以用你自己的域名访问 github pages 。 不爽的是，我们的目的是把 wiki 放在 wiki.yourname.com 的根目录下，而不是以仓库名命名的子目录。于是，不可避免地，需要新建一个帐号才行。看起来，新帐号似乎需要新的 ssh key 才能提交更改。其实是不必的。使用新帐号登录 github.com ，在“管理员”页面（右上角搜索框的下面有链接）把你的主帐号添加为协作者，这样本地就能继续使用主帐号的ssh key登录，并且 push 到新帐号的这个项目了。
+
+现在我们回到 vimwiki_html ，执行 `git remote add kwiki git@github.com:kwiki/kwiki.github.com.git` && `git push kwiki gh-pages` 。简单吧？不要跟我说这两句你都看不懂哦。
+
+OK，现在耐心等待 github 为你生成 pages 。因为添加了一个 remote ，刚才那个 sync.bat 也要改一下了，最后两行改为：
+{{{
+call git push origin gh-pages
+call git push kwiki gh-pages
+exit
+}}}
+很变态吧？枚举什么的最讨厌了。据说其实有镜像功能，这个还得再研究。
+
+接着，按照 [http://pages.github.com/ Github Pages 帮助文档] 的说明，添加 CNAME ，一切搞定！
+
+Wait, github 页面生成后，会给用户发送提醒邮件。每次同步成功都有这个邮件，多烦人啊，到 https://github.com/account/notifications 去改一下设置吧！
+ 
+事实上，现在你本地的 master 分支已经可以删除了。在本地运行 `git branch -D master` 即可。至于 github 上的 master ，难道就让它在那儿晾着？
+
+Actually, 为了让项目更有意义，这个 master 应该是 vimwiki 的模板文件、js、css什么的。 gh-pages 应该是项目的附属页面，而不是项目本身。
+
+Anyway, 老子这个项目就是让 wiki 作为项目本身，怎么着了？好吧，那我们就还是到 github 的管理员界面里去修改默认分支吧。
+
+=== 使用自己的服务器 ===
+之前已经说了，有两种方案。第一种方法太戳了，需要的人自己下去研究，我们直接说第二种方法。
+
+请参考： [http://toroid.org/ams/git-website-howto Using Git to manage a web site]。
+
+也可以阅读 [http://progit.org/book/zh/ch4-4.html Pro Git 上有关架设服务器的文档] 详细了解一下。
+
+这里的重点是把你的 SSH 公钥添加到服务器的 authorized_keys 里。可以看看明城的《[ http://www.gracecode.com/archives/3030/ 我是如此得深爱着 SSH》(额.. 麻~) 这篇文章，最后一段代码是重点：
+    ssh user@remotehost 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_rsa.pub
+
+比 github pages 简单。
+
+不过，注意了， Using Git to manage a web site　这篇文章中提到的代码：
+    $ git remote add web ssh://server.example.org/home/ams/website.git<br>
+    $ git push web +master:refs/heads/master
+
+他把本地的 master 分支推送给了 git server 。如果你之前也完了下提交给 github ，那你本地的当前分支其实是 dh-pages ， master 分支还保存着建立 dh-pages 之前的状态，如果没有合并分支的操作，你提交给 Web 服务器的就是已经形式死亡的 master 分支。那我们要怎么办呢？是删除 master 分支吗？还是在哪里做一下自动合并？
+
+是的，要搞清楚这些问题，你还需要理解 [http://progit.org/book/zh/ch3-0.html Git 的分支原理]。说实话，楼主写到这里已经有点想死了。
+
+不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ `git push web dh-pages` ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 `git checkout gh-pages` 即可。
+
+一切都打点妥当之后，不要忘了修改 sync.bat ，把你的服务器也包括进去哦。
+
+然后我发觉登录到 web 比登录 github 的 ssh 要快多了诶。原因不明。所以[http://wiki.ktmud.com/sync.bat 我就把推送到 github 的句子注释掉了]。就让 github 上那几个页面随时光慢慢老去吧……
+
+
+== 使用 Ftp + Batch file ==
+那你写的脚本要能够做到文件有更新才上传，如有需要则续传，如文件不存在则删除，等等…… 你能做到么？
+
+所以，省省吧。
+
+== 使用Dropbox或者其他各种box ==
+传说中的各种云存储？他们提供外链否？
+
+唔... Dropbox倒是提供[http://wiki.dropbox.com/TipsAndTricks/TextBasedLinuxInstall 用于Linux服务器的同步程序]。如果能把 Dropbox 架好，倒是能一劳永逸了。
+
+不过鉴于那什么墙的存在和很少有虚拟主机能提供root权限，我这里就不细说了，有兴趣的同学自己下去钻研吧！
+
+== 其他 ==
+是的，最后压轴推荐热辣武器， Dreamweaver 的站点管理！还有那些什么杂七杂八的IDEs，都能拿来用的哟！
+
+
+%title 你要怎么同步你的 vimwiki ?  - 丘迟的维基世界
