@@ -14,7 +14,7 @@ set fvar=%mydate%%mytime%
 call git add . 
 call git commit -a -m "Auto-commit on %fvar%"
 
-::call git push origin
-::call git push kwiki
+call git push origin
+call git push kwiki
 call git push web 
 exit
