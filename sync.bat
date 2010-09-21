@@ -1,6 +1,8 @@
 @echo off
-title 通过 Git 同步.. 
-echo Start synchronizing...
+title 同步到github.. 
+
+cls
+echo 开始同步...
 
 :: get date and time 
 for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
