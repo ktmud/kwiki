@@ -31,7 +31,7 @@ kwiki.loadCmt = function(provider){
         window.disqus_identifier = window.kwiki_identifier || undefined;
         thread = $('<div id="disqus_thread">');
         extraCSS = root_path + 'disqus.css';
-        theJS = 'disqus_loader.js';
+        theJS = root_path + 'disqus_loader.js';
     } else if( provider == 'intensedebate'){
         window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
         window.idcomments_post_id = kwiki_identifier;
@@ -52,19 +52,7 @@ kwiki.loadCmt = function(provider){
 
             if(extraCSS) kwiki.getCSS(extraCSS);
 
-            $.getScript(theJS,function(){
-                //setTimeout(function(){
-                    //$('iframe').attr('allowtransparency', true);
-                //}, 2000);
-
-                //$(window).keypress(function(e){
-                    ////Ctr+Enter 或者 Alt+S 提交
-                    //alert(e.keyCode);
-                    //if( (e.ctrKey && e.keyCode == '13') || (e.altKey && e.keyCode == '83')){
-                        //$('#dsq-post-button').click();
-                    //}
-                //});
-            });
+            $.getScript(theJS);
 
             win.unbind('scroll');
         }
