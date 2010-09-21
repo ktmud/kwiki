@@ -14,6 +14,7 @@ call git add .
 
 :: 请求输入 commit 消息
 Set /p cmsg=请输入Commit注释（留空则为提交时间）: 
+:: 这个语法实在是太戳了
 if not {%cmsg%}=={} set cmsg=%cmsg% - 
 call git commit -a -m "%cmsg%%date%"
 cls
