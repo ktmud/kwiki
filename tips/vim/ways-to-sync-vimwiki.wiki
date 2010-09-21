@@ -62,7 +62,7 @@ exit
 
 这个命令会执行当前 vimwiki 的 html 路径下的 sync.bat 脚本。必须等 push 操作都结束后才会返回 vim 界面。
 
-如果你愿意，还可以把生成与提交一起做了：
+只要你愿意，还可以把生成与提交一起做了：
     map <C-F4> <S-F4>:exec 'silent !cmd.exe /k "cd "'.VimwikiGet('path_html').'" & sync"'<cr>
 
 有点囧的是，关闭程序的快捷键是<M-F4>（Alt+F4），如此定义之后，有时候容易按错。

@@ -20,6 +20,8 @@
 
 <hr />
 == 重点推荐 ==
+现在你可以[http://github.com/ktmud/kwiki/commits/master/ 通过 GitHub 订阅本站的更新]啦！只要你愿意，还可以[http://github.com/ktmud/kwiki/commits/master.atom 点此订阅RSS]哦。
+
 # [[tips/vim/vimwiki-guide|使用vimwiki搭建你自己的维基世界]]
 # [[tips/vim/ways-to-sync-vimwiki|自动同步你的 vimwiki 到线上网站]]
 
