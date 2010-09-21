@@ -141,13 +141,14 @@ $(document).ready(function(){
     //评论
     if( !$.browser.msie ) kwiki.loadCmt('disqus');
 
-    //统计信息
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-1080811-17']);
-    _gaq.push(['_trackPageview']);
+});
 
-    $.getScript('http://www.google-analytics.com/ga.js');
+//Google 统计
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-1080811-17']);
+_gaq.push(['_trackPageview']);
+
+$.getScript('http://www.google-analytics.com/ga.js');
 
 
-    });
 
