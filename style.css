@@ -194,6 +194,7 @@ textarea {
     overflow-x: hidden;
     border: 1px solid #F0C81E;
     border-radius: 0 0 1px 1px;
+    -moz-border-radius: 0 0 1px 1px;
     color: #999;
     background: #0C1F2C;
     background: rgba(10,30,40,0.85);
@@ -208,6 +209,7 @@ textarea {
     font-size: 12px;
     background: #F0C81E;
     border-radius: 2px 2px 0 0;
+    -moz-border-radius: 2px 2px 0 0;
     color: #122;
     position: relative;
     z-index: 101;
@@ -330,6 +332,7 @@ textarea {
 .lesser {
     border: 1px solid #194058;
     border-radius: 3px 3px 0 0;
+    -moz-border-radius: 3px 3px 0 0;
 }
 .lesser .hd {
     text-align: center;
