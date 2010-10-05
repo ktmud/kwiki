@@ -4,7 +4,7 @@
 <head>
 <title>404 - 找不到</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="Stylesheet" type="text/css" href="style.css" />
+<link rel="Stylesheet" type="text/css" href="http://wiki.ktmud.com/style.css" />
 <script> var disqus_identifier = 'wiki_404', root_path = ''; </script>
 </head>
 <body>
