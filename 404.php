@@ -37,7 +37,7 @@
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="SiteMap.html" title="站点地图">给我一点导航吧</a></p>
 </div>
 </div>
-<script src="jquery-1.4.2.min.js" type="text/javascript"></script>
-<script src="vimwiki.js" type="text/javascript"></script>
+<script src="http://wiki.ktmud.com/jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="http://wiki.ktmud.com/vimwiki.js" type="text/javascript"></script>
 </body>
 </html>
