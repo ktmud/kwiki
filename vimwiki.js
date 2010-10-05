@@ -30,15 +30,15 @@ kwiki.loadCmt = function(provider){
         window.disqus_iframe_css = HOST_ROOT + 'disqus_iframe.css';
         window.disqus_identifier = window.kwiki_identifier || undefined;
         thread = $('<div id="disqus_thread">');
-        extraCSS = root_path + 'disqus.css';
-        theJS = root_path + 'disqus_loader.js';
+        extraCSS = HOST_ROOT + 'disqus.css';
+        theJS = HOST_ROOT + 'disqus_loader.js';
         //theJS = 'http://kwiki.disqus.com/embed.js';
     } else if( provider == 'intensedebate'){
         window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
         window.idcomments_post_id = kwiki_identifier;
         window.idcomments_post_url = undefined;
         thread = $('<div id="idc-container"><span class="startloading">Loading comments..<span></div>');
-        //extraCSS = root_path + 'intensedebate.css';
+        //extraCSS = HOST_ROOT + 'intensedebate.css';
         theJS = 'http://www.intensedebate.com/js/genericCommentWrapperV2.js';
     } else {
         return;
