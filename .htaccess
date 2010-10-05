@@ -36,7 +36,6 @@
   ExpiresByType text/html A1
 </IfModule>
 
-
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /

@@ -1,5 +1,5 @@
 var HOST_ROOT = 'http://wiki.ktmud.com/',
-kwiki_identifier = 'wiki' + window.location.pathname.replace('/','_').replace('index.html','').replace('.html','');
+kwiki_identifier = 'wiki' + window.location.pathname.replace(/\//g,'_').replace('index.html','').replace('.html','');
 
 var kwiki = kwiki || {};
 
@@ -32,6 +32,7 @@ kwiki.loadCmt = function(provider){
         thread = $('<div id="disqus_thread">');
         extraCSS = root_path + 'disqus.css';
         theJS = root_path + 'disqus_loader.js';
+        //theJS = 'http://kwiki.disqus.com/embed.js';
     } else if( provider == 'intensedebate'){
         window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
         window.idcomments_post_id = kwiki_identifier;
@@ -77,8 +78,8 @@ $(document).ready(function(){
             $(this).stop().fadeTo(300,'0.25')
         });
 
-        $(window).keypress(function(e){
-            if( e.shiftKey && e.keyCode == '90'){
+        $('html').keypress(function(e){
+            if( e.shiftKey && ( e.charCode || e.keyCode ) == '90'){
                 e.preventDefault();
                 $('div.tocWrap').toggle(200);
             }
@@ -112,9 +113,9 @@ $(document).ready(function(){
     //把< 转为html实体>
 
     //Google自定义搜索
-    //$.getScript('http://www.google.com/jsapi', function(){
-        //google.load('search', '1', {language : 'zh-CN', 'callback': cseloaded });
-    //});
+    $.getScript('http://www.google.com/jsapi', function(){
+        google.load('search', '1', {language : 'zh-CN', 'callback': cseloaded });
+    });
 
     function cseloaded() {
         var customSearchControl = new google.search.CustomSearchControl('013996024720219627519:n_9lss7xao0');
