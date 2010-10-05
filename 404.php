@@ -4,7 +4,7 @@
 <head>
 <title>404 - 找不到</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="Stylesheet" type="text/css" href="http://wiki.ktmud.com/style.css" />
+<link rel="Stylesheet" type="text/css" href="/style.css" />
 <script> var disqus_identifier = 'wiki_404', root_path = ''; </script>
 </head>
 <body>
@@ -12,13 +12,13 @@
 <div id="header">
 	<ul id="top-nav">
 		<li>
-			<a href="index.html">首页</a>
+			<a href="/index.html">首页</a>
 		</li>
 		<li>
-			<a href="tips/index.html">经验总结</a>
+			<a href="/tips/index.html">经验总结</a>
 		</li>
 		<li>
-			<a href="diary/diary.html">日记</a>
+			<a href="/diary/diary.html">日记</a>
 		</li>
 	</ul>
 </div>
@@ -37,7 +37,7 @@
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="SiteMap.html" title="站点地图">给我一点导航吧</a></p>
 </div>
 </div>
-<script src="http://wiki.ktmud.com/jquery-1.4.2.min.js" type="text/javascript"></script>
-<script src="http://wiki.ktmud.com/vimwiki.js" type="text/javascript"></script>
+<script src="/jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="/vimwiki.js" type="text/javascript"></script>
 </body>
 </html>
