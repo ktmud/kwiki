@@ -32,7 +32,8 @@
 <li><a href="#toc_1.1">教程</a></li>
 <li><a href="#toc_1.2">你知道吗？</a></li>
 <ul>
-<li><a href="#toc_1.2.1">Vim7.3 的持久撤销</a></li>
+<li><a href="#toc_1.2.1">更易用的JSLint</a></li>
+<li><a href="#toc_1.2.2">Vim7.3 的持久撤销</a></li>
 </ul>
 <li><a href="#toc_1.3">颤抖吧！IDE！</a></li>
 </ul>
@@ -59,7 +60,46 @@
 </li>
 </ol>
 
-<h3 id="toc_1.2.1">Vim7.3 的持久撤销</h3>
+<h3 id="toc_1.2.1">更易用的JSLint</h3>
+<p>
+明爷(gracecode.com)曾介绍过<a href="http://www.gracecode.com/archives/2902/">如何在Vim中使用JSLint</a>，他写这篇文章时还没有诞生我今天要介绍的插件：<a href="http://www.vim.org/scripts/script.php?script_id=2729">jslint.vim</a>。
+</p>
+
+<p>
+事实证明，这个插件是很好用的。不过最初安装时要花点功夫。Linux下按照README的说明来，应该不会遇到什么问题，我这里讲一下在Windows下的注意事项。
+</p>
+
+<p>
+1. 这个插件只能装在系统用户目录下，即你在Vim里执行 <code>:cd ~</code> 所到的目录。（Win7下是 C:\Users\Username ）
+</p>
+
+<p>
+要突破上面的限制，修改 <code>ftplugin/javascript/jslint.vim</code> 第16行定义 install_dir 的部分：
+$VIMFILES 是我自己在 _vimrc 里定义的变量，在 Windows 下为 <code>D:/dev/Vim/vimfiles</code>
+</p>
+<pre>
+if has("win32")
+	let s:install_dir = '"' . expand($VIMFILES."/ftplugin/javascript") . '"'
+else
+</pre>
+
+<p>
+3. 对于带中文的JS文件，容易出现行定位错误的问题。原因和小明那篇文章里说的一样。我们同样在关键地方添加 iconv 转一下字符即可。
+</p>
+
+<p>
+修改定义 <code>b:jslint_output</code> 的地方：
+</p>
+<blockquote>
+let b:jslint_output = system(s:cmd, iconv(join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n", &amp;enc, "gbk"))
+</blockquote>
+
+<p>
+这么简单的问题，我折腾了两个小时。之前以为是换行符的问题。唉...
+</p>
+
+
+<h3 id="toc_1.2.2">Vim7.3 的持久撤销</h3>
 <p>
 Vim 7.3 提供 <strong>持久撤销</strong> (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
 </p>
