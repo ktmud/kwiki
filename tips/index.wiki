@@ -9,8 +9,5 @@
 * [[Linux|Linux]]
 * [[Vim|Vim]]
 
-{{{id="no-comment"
-本页不允许评论
-}}}
 
 %title 丘迟的维基 - 编程小贴士

@@ -17,8 +17,13 @@
 # [http://www.cnblogs.com/bluedream2009/ Blue Dream] - JavaScript必知必会Snippets
 # [http://www.cnblogs.com/cloudgamer/ cloudgamer] - 同上
 
-== 重构/前端界 同辈 ==
+== Co-Workers ==
+# [http://f2e.us 文河]
+# [http://www.zipeng.info 乔福]
+# [http://www.pushiming.com 法海]
 
+
+== 重构/前端界 同辈 ==
 # [http://avenirzheng.net 郑焕义] - 腾讯
 # [http://blog.allenm.me/ 阿伦孟] - 阿里B2B
 # [http://xiebiji.com/ 小Joe] - 腾讯
