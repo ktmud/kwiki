@@ -1,25 +1,19 @@
 @echo off
-title 同步到github.. 
+title 閫氳繃 Git 鍚屾.. 
+::Start...
+echo Start synchronizing...
 
-cls
-echo 开始同步...
+echo Commit changes...
 
 :: get date and time 
 for /f "delims=" %%a in ('date/t') do @set mydate=%%a 
 for /f "delims=" %%a in ('time/t') do @set mytime=%%a 
-set date=%mydate%%mytime% 
+set fvar=%mydate%%mytime% 
 
 :: add all new files 
 call git add . 
+call git commit -a -m "Automated commit on %fvar%"
 
-:: 请求输入 commit 消息
-Set /p cmsg=请输入Commit注释（留空则为提交时间）: 
-:: bat语法实在是太戳了
-call git commit -a -m "%cmsg%_%date%"
-REM echo 开始推送到github/ktmud/kwiki/...
-REM call git push origin
-REM echo 开始推送到kwiki
-REM call git push kwiki
-echo 开始推送到Web
-call git push web 
-exit
+:: check if ssh-agent is running
+tasklist|find /i "ssh-agent.exe" || cmd /c ""C:\Program Files\Git\bin\sh.exe" --login -i" && exit
+call git push origin master

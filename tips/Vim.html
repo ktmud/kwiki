@@ -24,18 +24,27 @@
 </div>
 <div id="cse"></div>
 <div id="main">
-<h1 id="toc_1">Vim</h1>
+<h1 id="toc_1">Vim 经验与技巧</h1>
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Vim</a></li>
+<li><a href="#toc_1">Vim 经验与技巧</a></li>
 <ul>
 <li><a href="#toc_1.1">教程</a></li>
-<li><a href="#toc_1.2">你知道吗？</a></li>
+<li><a href="#toc_1.2">准备工作</a></li>
+<li><a href="#toc_1.3">你知道吗？</a></li>
 <ul>
-<li><a href="#toc_1.2.1">更易用的JSLint</a></li>
-<li><a href="#toc_1.2.2">Vim7.3 的持久撤销</a></li>
+<li><a href="#toc_1.3.1">Vim7.3 的持久撤销</a></li>
 </ul>
-<li><a href="#toc_1.3">颤抖吧！IDE！</a></li>
+<li><a href="#toc_1.4">颤抖吧！IDE！</a></li>
+<ul>
+<li><a href="#toc_1.4.1">编辑状态的保存</a></li>
+<li><a href="#toc_1.4.2">介绍 Vim 中的批量查找替换</a></li>
+<li><a href="#toc_1.4.3">在 Vim 中启用 JSLint</a></li>
+<ul>
+<li><a href="#toc_1.4.3.1">试试 Google Closure Linter</a></li>
+</ul>
+</ul>
+<li><a href="#toc_1.5">Vim Tips</a></li>
 </ul>
 </ul>
 </div>
@@ -50,7 +59,12 @@
 </li>
 </ol>
 
-<h2 id="toc_1.2">你知道吗？</h2>
+<h2 id="toc_1.2">准备工作</h2>
+<p>
+ 请先在你的 vimrc 里定义变量 $VIMFILES    是我自己在 _vimrc 里定义的变量，在 Windows 下为 <code>$VIM/vimfiles</code>
+</p>
+ 
+<h2 id="toc_1.3">你知道吗？</h2>
 <ol>
 <li>
 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
@@ -60,46 +74,7 @@
 </li>
 </ol>
 
-<h3 id="toc_1.2.1">更易用的JSLint</h3>
-<p>
-明爷(gracecode.com)曾介绍过<a href="http://www.gracecode.com/archives/2902/">如何在Vim中使用JSLint</a>，他写这篇文章时还没有诞生我今天要介绍的插件：<a href="http://www.vim.org/scripts/script.php?script_id=2729">jslint.vim</a>。
-</p>
-
-<p>
-事实证明，这个插件是很好用的。不过最初安装时要花点功夫。Linux下按照README的说明来，应该不会遇到什么问题，我这里讲一下在Windows下的注意事项。
-</p>
-
-<p>
-1. 这个插件只能装在系统用户目录下，即你在Vim里执行 <code>:cd ~</code> 所到的目录。（Win7下是 C:\Users\Username ）
-</p>
-
-<p>
-要突破上面的限制，修改 <code>ftplugin/javascript/jslint.vim</code> 第16行定义 install_dir 的部分：
-$VIMFILES 是我自己在 _vimrc 里定义的变量，在 Windows 下为 <code>D:/dev/Vim/vimfiles</code>
-</p>
-<pre>
-if has("win32")
-	let s:install_dir = '"' . expand($VIMFILES."/ftplugin/javascript") . '"'
-else
-</pre>
-
-<p>
-3. 对于带中文的JS文件，容易出现行定位错误的问题。原因和小明那篇文章里说的一样。我们同样在关键地方添加 iconv 转一下字符即可。
-</p>
-
-<p>
-修改定义 <code>b:jslint_output</code> 的地方：
-</p>
-<blockquote>
-let b:jslint_output = system(s:cmd, iconv(join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n", &amp;enc, "gbk"))
-</blockquote>
-
-<p>
-这么简单的问题，我折腾了两个小时。之前以为是换行符的问题。唉...
-</p>
-
-
-<h3 id="toc_1.2.2">Vim7.3 的持久撤销</h3>
+<h3 id="toc_1.3.1">Vim7.3 的持久撤销</h3>
 <p>
 Vim 7.3 提供 <strong>持久撤销</strong> (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
 </p>
@@ -117,8 +92,114 @@ set undolevels=1000 "maximum number of changes that can be undone
 <strong>$VIMFILES/\_undodir</strong> - $VIMFILES 是我们之前在 vimrc 中定义的环境变量， windows 下是 $VIM/vimfiles/ 。请注意，为了和其他目录区分，undodir前面有下划线 _undodir 。因为有下划线，前面的反斜杠又不可少了。而且这个目录必须自己手动建立。如果不存在，Vim 是不会帮你自动建立的。
 </p>
 
+<h2 id="toc_1.4">颤抖吧！IDE！</h2>
+<h3 id="toc_1.4.1">编辑状态的保存</h3>
+<p>
+大部分IDE都提供记录文件关闭前的状态的功能，个别考虑比较全面的还可以记住软件关闭前都打开了哪些文件。这些功能Vim都能做到。
+</p>
 
-<h2 id="toc_1.3">颤抖吧！IDE！</h2>
+<p>
+记录文件状态（包括独立于该文件的键盘映射、代码折叠状态等）：
+</p>
+<pre>
+autocmd BufWinLeave * if expand('%') != '' &amp;&amp; &amp;buftype == '' | mkview | endif
+autocmd BufRead     * if expand('%') != '' &amp;&amp; &amp;buftype == '' | silent loadview | syntax on | endif
+</pre>
+<p>
+那些 if 判断是为了避免进入新建文件的缓冲区时，出现文件名不存在的错误。
+</p>
+
+<p>
+如果参数为空，记录/载入 Vim 关闭时的状态。
+</p>
+
+<p>
+一般来说，上面的代码就够用了。最大的缺陷可能就是时间长了 <strong>$VIMFILES/views</strong> 目录下就会有很多垃圾文件，有些文件你可能一辈子也不会打开了，但它们的状态文件仍然存在。你可以写一段删除过老文件的脚本，在 Linux 下就像这样：
+</p>
+<pre>
+function! RemoveOldViewFiles
+    exe 'find '.$VIMFILES.'/view* -mtime +90 -exec rm {} \;'
+endfunction
+nmap &lt;leader&gt;.cl :call RemoveOldViewFiles&lt;cr&gt;
+</pre>
+<p>
+删除 90 天以前的文件。
+</p>
+
+<h3 id="toc_1.4.2">介绍 Vim 中的批量查找替换</h3>
+<p>
+1. <strong>vimgrep</strong> 命令
+试用 <code>:vimgrep word *</code> 可以在当前目录的任意文件下查找“word”，并生成 quickfix 列表。试用 <code>:cl</code> 可以查看所有匹配结果。使用 <code>:cn</code> 到下一个， <code>:cp</code> 到上一个。
+</p>
+
+<p>
+使用 <code>:vimgrep /pattern/gj *.php</code> 可以在当前目录的php文件中按搜索模式 pattern 查找。标志位 g 代表每次匹配都加入匹配结果列表，否则每行只匹配一次。标志位 j 表示只更新 quickfix 列表，否则 vim 会跳到第一个匹配上。
+</p>
+
+<p>
+更多说明，请 <code>:h vimgrep</code> 或者 <a href="http://www.vimer.cn/2009/10/vimgvim%E5%AE%9E%E7%8E%B0%E5%A4%9A%E6%96%87%E4%BB%B6%E7%9A%84%E6%9F%A5%E6%89%BE%E5%92%8C%E6%9B%BF%E6%8D%A2.html">点这里</a>。
+</p>
+
+<p>
+2. arguments 参数列表
+参数列表就是一系列文件列表。在上面链接的文章已有介绍，不细讲。
+</p>
+
+<h3 id="toc_1.4.3">在 Vim 中启用 JSLint</h3>
+<p>
+明爷(gracecode.com)曾介绍过<a href="http://www.gracecode.com/archives/2902/">如何在Vim中使用JSLint</a>，他写这篇文章时还没有诞生我今天要介绍的插件：<a href="http://www.vim.org/scripts/script.php?script_id=2729">jslint.vim</a>。
+</p>
+
+<p>
+事实证明，这个插件是很好用的。不过最初安装时要花点功夫。Linux下按照README的说明来，应该不会遇到什么问题，我这里讲一下在Windows下的注意事项。
+</p>
+
+<p>
+1. 这个插件只能装在系统用户目录下（<code>$HOME</code>），即你在Vim里执行 <code>:cd ~</code> 所到的目录。（Win7下是 C:\Users\Username ）
+</p>
+
+<p>
+要突破上面的限制，修改 <code>ftplugin/javascript/jslint.vim</code> 第16行定义 install_dir 的部分：
+</p>
+<pre>
+if has("win32")
+	let s:install_dir = '"' . expand($VIMFILES."/ftplugin/javascript") . '"'
+else
+</pre>
+
+<p>
+2. 对于带中文的JS文件，容易出现行定位错误的问题。原因和小明那篇文章里说的一样。我们同样在关键地方添加 iconv 转一下字符即可。
+</p>
+
+<p>
+修改定义 <code>b:jslint_output</code> 的地方：
+</p>
+<blockquote>
+let b:jslint_output = system(s:cmd, iconv(join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n", &amp;enc, "gbk"))
+</blockquote>
+
+<p>
+这么简单的问题，我折腾了两个小时。之前以为是换行符的问题。唉...
+</p>
+
+<h4 id="toc_1.4.3.1">试试 Google Closure Linter</h4>
+<p>
+[JSLint <a href="http://www.jslint.com/">http://www.jslint.com/</a>] 默认的规则在有些情况下不太实用，比如说<a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines">jQuery就会无视一些JSLint的错误</a>。基于 Google 的<a href="http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml">编码风格</a>，有一个 *<a href="http://code.google.com/closure/utilities/">Closure Linter</a>*，我们可以试着把它集成到 Vim 中。
+</p>
+
+<p>
+我修改了上面的 Vim 插件，有需要的可以[点击这里]下载。
+</p>
+
+<h2 id="toc_1.5">Vim Tips</h2>
+<ol>
+<li>
+获取当前buffer的总行数的函数：  <code>line("$")</code>
+</li>
+<li>
+静默执行shell：   <code>:silent !cmd</code>
+</li>
+</ol>
 </div>
 <div id="footer">
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>

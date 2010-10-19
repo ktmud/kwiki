@@ -335,6 +335,7 @@ textarea {
     -moz-border-radius: 3px 3px 0 0;
 }
 .lesser .hd {
+    cursor: pointer;
     text-align: center;
     background: rgba(20,120,80,0.1);
 }
@@ -344,7 +345,6 @@ textarea {
     font-size: 14px;
     color: #aed;
     margin: 0;
-    cursor: pointer;
 }
 .lesser .cont {
     display: none;
