@@ -4,7 +4,7 @@
 <head>
 <title>404 - 找不到</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="Stylesheet" type="text/css" href="style.css" />
+<link rel="Stylesheet" type="text/css" href="http://wiki.ktmud.com/style.css" />
 <script type="text/javascript">
     var disqus_identifier = 'wiki__404';
 </script>
@@ -66,6 +66,6 @@
 </script>
 <link rel="stylesheet" href="cse.css" type="text/css" />
 <script src="http://code.jquery.com/jquery-1.4.2.min.js" type="text/javascript"></script>
-<script src="vimwiki.js" type="text/javascript"></script>
+<script src="http://wiki.ktmud.com/vimwiki.js" type="text/javascript"></script>
 </body>
 </html>
