@@ -31,8 +31,8 @@ kwiki.loadCmt = function(provider) {
         window.disqus_identifier = window.kwiki_identifier || undefined;
         thread = $('<div id="disqus_thread">');
         extraCSS = HOST_ROOT + 'disqus.css';
-        theJS = HOST_ROOT + 'disqus_loader.js';
-        //theJS = 'http://kwiki.disqus.com/embed.js';
+        //theJS = HOST_ROOT + 'disqus_loader.js';
+        theJS = 'http://kwiki.disqus.com/embed.js';
     } else if (provider == 'intensedebate') {
         window.idcomments_acct = '5a60a7c6da8072e3edcb67fb0e7850e9';
         window.idcomments_post_id = kwiki_identifier;
