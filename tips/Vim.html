@@ -45,6 +45,11 @@
 </ul>
 </ul>
 <li><a href="#toc_1.5">Vim Tips</a></li>
+<ul>
+<li><a href="#toc_1.5.1">插件与配置</a></li>
+<li><a href="#toc_1.5.2">编辑</a></li>
+<li><a href="#toc_1.5.3">使用 Vim Script</a></li>
+</ul>
 </ul>
 </ul>
 </div>
@@ -65,15 +70,6 @@
 </p>
  
 <h2 id="toc_1.3">你知道吗？</h2>
-<ol>
-<li>
-在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
-</li>
-<li>
-把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( <code>C:\Program Files\Git\share\vim</code> )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
-</li>
-</ol>
-
 <h3 id="toc_1.3.1">Vim7.3 的持久撤销</h3>
 <p>
 Vim 7.3 提供 <strong>持久撤销</strong> (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
@@ -124,6 +120,10 @@ nmap &lt;leader&gt;.cl :call RemoveOldViewFiles&lt;cr&gt;
 </pre>
 <p>
 删除 90 天以前的文件。
+</p>
+
+<p>
+至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现
 </p>
 
 <h3 id="toc_1.4.2">介绍 Vim 中的批量查找替换</h3>
@@ -192,6 +192,34 @@ let b:jslint_output = system(s:cmd, iconv(join(s:jslintrc + getline(b:firstline,
 </p>
 
 <h2 id="toc_1.5">Vim Tips</h2>
+<h3 id="toc_1.5.1">插件与配置</h3>
+<ol>
+<li>
+在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
+</li>
+<li>
+把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( <code>C:\Program Files\Git\share\vim</code> )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
+</li>
+<li>
+NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
+</li>
+</ol>
+
+<h3 id="toc_1.5.2">编辑</h3>
+<ol>
+<li>
+要在 Vim 里跨行匹配，可以用 <code>\_.</code> 匹配包括换行符在内的任意字符。
+</li>
+<li>
+使用 <code>\{-}</code> 实现类似常见 perl 正则里的 <code>?</code> 之作用的懒惰匹配，尽量少的匹配前面的匹配元。
+</li>
+<li>
+使用 <code>:s</code> (替换)命令时，添加标志位 <strong>e</strong> 可以忽略找不到 pattern 的错误，这在函数或键盘映射命令中非常有用。如，下面的代码可以格式化CSS（虽然并不完美）：
+    map &lt;leader&gt;css :%s/;\s*\([a-z*_-}]\)/;\r\1/ge&lt;cr&gt;:%s/\(\w\)\s*{\([^\r]\)/\1\ {\r\2/ge&lt;cr&gt;:%s/:\(\w\)/:\ \1/ge&lt;cr&gt;:%s/}\(\w\\|#\\|\.\)/}\r\1/ge&lt;cr&gt;,=
+</li>
+</ol>
+
+<h3 id="toc_1.5.3">使用 Vim Script</h3>
 <ol>
 <li>
 获取当前buffer的总行数的函数：  <code>line("$")</code>
