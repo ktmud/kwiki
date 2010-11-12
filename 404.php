@@ -14,13 +14,13 @@
 <div id="header">
 	<ul id="top-nav">
 		<li>
-			<a href="index.html">首页</a>
+			<a href="http://wiki.ktmud.com/index.html">首页</a>
 		</li>
 		<li>
-			<a href="tips/index.html">经验总结</a>
+			<a href="http://wiki.ktmud.com/tips/index.html">经验总结</a>
 		</li>
 		<li>
-			<a href="diary/diary.html">日记</a>
+			<a href="http://wiki.ktmud.com/diary/diary.html">日记</a>
 		</li>
 	</ul>
 </div>
