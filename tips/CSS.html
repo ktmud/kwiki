@@ -26,8 +26,23 @@
 <div id="main">
 <h1 id="toc_1">CSS</h1>
 <p>
-暂时神马都没有哦。
+IE8不认 .selecto, .sel, {} 这样的CSS，注意最后多出来的那个逗号。
 </p>
+
+<h2 id="toc_1.1">IE6 的最大宽度最大高度</h2>
+<p>
+利用 Expression , 并且只执行一次，完美性能。
+</p>
+<pre>
+#shopinfo img {
+  /* 'clear' is a dummy property */
+  _clear: expression( 
+     width &gt; 180 ? width = 180 : true, 
+     height &gt; 90 ? height = 90 : true,
+     style.clear = "none", 0
+  );
+}
+</pre>
 </div>
 <div id="footer">
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
