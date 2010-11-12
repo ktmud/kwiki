@@ -123,7 +123,63 @@ nmap &lt;leader&gt;.cl :call RemoveOldViewFiles&lt;cr&gt;
 </p>
 
 <p>
-至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现
+至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现：
+</p>
+
+<p>
+编辑你的 vimrc :
+</p>
+<pre>
+" Session files Vim关闭时保存会话状态
+set sessionoptions+=unix
+set sessionoptions-=blank
+"set sessionoptions-=options
+autocmd VimEnter * call LoadSession()
+autocmd VimLeave * call MakeSession() 
+
+function! MakeSession()
+    if !has('gui_running')
+        hi clear
+    endif
+    if bufname('')  == ''
+        exe 'bdelete '.bufnr('')
+    endif
+    let l:count = 0
+    let l:i = 0
+    while l:i &lt;= bufnr('$')
+        if buflisted(count)
+            let l:count += 1
+        endif
+        let l:i+=1
+    endwhile
+    if l:count &gt;= 4
+        mksession! ~/.last_session.vim
+    endif
+endfunction
+
+function! LoadSession()
+    "if exists('g:SessionLoaded')
+    "return
+    "endif
+    if expand('%') == '' &amp;&amp; filereadable($HOME.'/.last_session.vim') &amp;&amp; !&amp;diff
+        silent so ~/.last_session.vim
+    endif
+
+    let l:buftotal = bufnr('$')
+    let l:i = 0
+    let l:crtpath = getcwd() 
+    while l:i &lt;= l:buftotal
+        " 列表中还未载入的buffer，如果不在当前工作目录，会被删除
+        if !bufloaded(l:i) &amp;&amp; buflisted(l:i) &amp;&amp; expand('%:p') !~ l:crtpath
+            exe 'bdelete '.l:i
+            echo expand('%:p') .' !~ '. l:crtpath
+        endif
+        let l:i += 1
+    endwhile
+endfunction
+</pre>
+<p>
+这段代码应该很好读懂，我就不解释了～ 有什么问题，请[#disqus_thread 留言]！
 </p>
 
 <h3 id="toc_1.4.2">介绍 Vim 中的批量查找替换</h3>
