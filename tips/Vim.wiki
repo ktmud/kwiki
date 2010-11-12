@@ -9,9 +9,6 @@
  请先在你的 vimrc 里定义变量 $VIMFILES    是我自己在 _vimrc 里定义的变量，在 Windows 下为 `$VIM/vimfiles`
  
 == 你知道吗？ ==
-# 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
-# 把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( `C:\Program Files\Git\share\vim` )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
-
 === Vim7.3 的持久撤销  ===
 Vim 7.3 提供 *持久撤销* (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
 {{{
@@ -45,6 +42,8 @@ endfunction
 nmap <leader>.cl :call RemoveOldViewFiles<cr>
 }}}
 删除 90 天以前的文件。
+
+至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现
 
 === 介绍 Vim 中的批量查找替换 ===
 1. *vimgrep* 命令
@@ -81,9 +80,24 @@ else
 ==== 试试 Google Closure Linter ====
 [JSLint http://www.jslint.com/] 默认的规则在有些情况下不太实用，比如说[http://docs.jquery.com/JQuery_Core_Style_Guidelines jQuery就会无视一些JSLint的错误]。基于 Google 的[http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml 编码风格]，有一个 *[http://code.google.com/closure/utilities/ Closure Linter]*，我们可以试着把它集成到 Vim 中。
 
-我修改了上面的 Vim 插件，有需要的可以[点击这里]下载。
+我修改了上面的 Vim 插件，有需要的可以[https://github.com/ktmud/vim-unix/raw/master/.vim/ftplugin/javascript/jslint.vim 点击这里]下载。
+
+gjslint 唯一的遗憾就是“字数过多”这个限制太严格了，对于我们宽屏用户来说，80个字符远远不够啊。暂时没有找到解决办法。
 
 == Vim Tips ==
+=== 插件与配置 ===
+# 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
+# 把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( `C:\Program Files\Git\share\vim` )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
+# NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
+
+=== 编辑 ===
+# 要在 Vim 里跨行匹配，可以用 `\_.` 匹配包括换行符在内的任意字符。
+# 使用 `\{-}` 实现类似常见 perl 正则里的 `?` 之作用的懒惰匹配，尽量少的匹配前面的匹配元。
+# 使用 `:s` (替换)命令时，添加标志位 *e* 可以忽略找不到 pattern 的错误，这在函数或键盘映射命令中非常有用。如，下面的代码可以格式化CSS（虽然并不完美）：
+    map <leader>css :%s/;\s*\([a-z*_-}]\)/;\r\1/ge<cr>:%s/\(\w\)\s*{\([^\r]\)/\1\ {\r\2/ge<cr>:%s/:\(\w\)/:\ \1/ge<cr>:%s/}\(\w\\|#\\|\.\)/}\r\1/ge<cr>,=
+
+=== 使用 Vim Script ===
 # 获取当前buffer的总行数的函数：  `line("$")`
 # 静默执行shell：   `:silent !cmd`
+
 %title 丘迟的维基世界 - Vim 小贴士

@@ -1,4 +1,7 @@
 = Linux =
+== 技巧 ==
+`tar zxvf file.tar.gz -C /target/dir` 可以解压 tar 包到指定目录。
+
 == Bash 脚本让生活更轻松 ==
 == 营造堪比 Windows 的体验 ==
 # 安装 Dropbox 并翻墙<br />
