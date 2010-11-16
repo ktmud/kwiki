@@ -251,7 +251,7 @@ $ git push web +master:refs/heads/master
 </blockquote>
 
 <p>
-他把本地的 master 分支推送给了 git server 。如果你之前也完了下提交给 github ，那你本地的当前分支其实是 dh-pages ， master 分支还保存着建立 dh-pages 之前的状态，如果没有合并分支的操作，你提交给 Web 服务器的就是已经形式死亡的 master 分支。那我们要怎么办呢？是删除 master 分支吗？还是在哪里做一下自动合并？
+他把本地的 master 分支推送给了 git server 。如果你之前也玩了下提交给 github ，那你本地的当前分支其实是 gh-pages ， master 分支还保存着建立 gh-pages 之前的状态，如果没有合并分支的操作，你提交给 Web 服务器的就是已经形式死亡的 master 分支。那我们要怎么办呢？是删除 master 分支吗？还是在哪里做一下自动合并？
 </p>
 
 <p>
@@ -259,7 +259,7 @@ $ git push web +master:refs/heads/master
 </p>
 
 <p>
-不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ <code>git push web dh-pages</code> ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 <code>git checkout gh-pages</code> 即可。
+不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ <code>git push web gh-pages</code> ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 <code>git checkout gh-pages</code> 即可。
 </p>
 
 <p>
