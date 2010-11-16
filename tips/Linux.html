@@ -25,13 +25,64 @@
 <div id="cse"></div>
 <div id="main">
 <h1 id="toc_1">Linux</h1>
-<h2 id="toc_1.1">技巧</h2>
+<h2 id="toc_1.1">小贴士</h2>
 <p>
 <code>tar zxvf file.tar.gz -C /target/dir</code> 可以解压 tar 包到指定目录。
 </p>
 
-<h2 id="toc_1.2">Bash 脚本让生活更轻松</h2>
-<h2 id="toc_1.3">营造堪比 Windows 的体验</h2>
+<h2 id="toc_1.2">疑难杂症</h2>
+<p>
+<strong>nginx %document_root% 引发的 php 404 问题</strong>
+需求是这样的，我需要在 nginx 中配置一个 phpmyadmin, 然后写了个 <strong>extra/phpmyadmin.conf</strong> 文件， include 到需要的网站中。比如说对于 ktmud.com 这个网站，有一个 <strong>sites/ktmud.com.conf</strong> 这个文件，内容如下：
+</p>
+<pre>
+server {
+    listen       80;
+    server_name  ktmud.com;
+
+    location / {
+        root   /srv/http/ktmud.com; 
+        index  index.html index.htm index.php;
+    }
+    
+    include extra/phpmyadmin.conf;
+    
+    location ~ /\.ht {
+        deny  all;
+    }
+}  
+</pre>
+
+<p>
+然后 <strong>extra/phpmyadmin.conf</strong> 的内容如下：
+</p>
+<pre>
+location /phpmyadmin {   
+    root    /usr/share/webapps;   
+    index   index.php;   
+}   
+ 
+location ~ \.php$ {   
+    set $php_root   $document_root;   
+    if ($request_uri ~* /phpmyadmin) {   
+        set $php_root /usr/share/webapps;   
+    }   
+ 
+    fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock; 
+    fastcgi_index  index.php;   
+    fastcgi_param  SCRIPT_FILENAME  $php_root$fastcgi_script_name;   
+    #fastcgi_param  HTTPS on; 
+    include  fastcgi_params; 
+}   
+</pre>
+
+<p>
+之后就发现访问 php 文件一片空白，并且返回状态码 404 。使用 rewrite 法 debug ，发现是传给 cgi 的 %document_root% 不对。它居然用了默认的 /usr/html/ 。看来在 <strong>ktmud.com.conf</strong> 这个文件里设定的 root 没有生效。然后 Google 了好大一会儿，才发现，这个 root 不能写在 Location 里！他只在 <code>Location / {} </code> 这块大括号里生效！解决办法当然是去掉 <code>Location /</code> 咯!
+</p>
+
+<h2 id="toc_1.3">轻松你的生活</h2>
+<h3 id="toc_1.3.1">Bash 脚本让生活更轻松</h3>
+<h3 id="toc_1.3.2">营造堪比 Windows 的体验</h3>
 <ol>
 <li>
 安装 Dropbox 并翻墙<br />
