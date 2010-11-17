@@ -49,7 +49,7 @@ kwiki.loadCmt = function(provider) {
     var win = $(window);
 
     function load() {
-        if (win.scrollTop() + win.height() > thread.offset().top - 100) {
+        if (win.scrollTop() + win.height() > thread.offset().top - 200) {
 
             if (extraCSS) kwiki.getCSS(extraCSS);
 
