@@ -144,6 +144,15 @@ pre {
 table {
     border-collapse: collapse;
 }
+.syntaxhighlighter table {
+    width: 100%;
+}
+.syntaxhighlighter td.gutter {
+    width: 1em;
+}
+.syntaxhighlighter .gutter .line {
+    padding-right: 0.3em;
+}
 th, td {
     border: 1px solid #256;
     padding: 0.3em 0.5em;

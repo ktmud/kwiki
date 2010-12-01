@@ -66,9 +66,18 @@
 
 <h2 id="toc_1.2">准备工作</h2>
 <p>
- 请先在你的 vimrc 里定义变量 $VIMFILES    是我自己在 _vimrc 里定义的变量，在 Windows 下为 <code>$VIM/vimfiles</code>
+请先在你的 vimrc 里定义变量 $VIMFILES 。比如说 Windows 下，我把 vimfiles 放在了 Vim 安装目录的 <code>vimfiles</code> 目录下：
 </p>
- 
+<pre>
+if has("win32")
+    let $VIMFILES = $VIM.'/vimfiles'
+    let $V = $VIM.'/_vimrc'
+else
+    let $VIMFILES = $HOME.'/.vim'
+    let $V = $HOME.'/.vimrc'
+endif
+</pre>
+
 <h2 id="toc_1.3">你知道吗？</h2>
 <h3 id="toc_1.3.1">Vim7.3 的持久撤销</h3>
 <p>
@@ -268,6 +277,9 @@ NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
 <h3 id="toc_1.5.2">编辑</h3>
 <ol>
 <li>
+除了普通模式，可视模式，插入模式，你是否还知道有一个替换模式？正如在普通编辑器里按 <kbd>Insert</kbd> 键所切换入的那样，输入的文本会逐字替换光标下的字符。
+</li>
+<li>
 要在 Vim 里跨行匹配，可以用 <code>\_.</code> 匹配包括换行符在内的任意字符。
 </li>
 <li>
@@ -278,6 +290,16 @@ NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
     map &lt;leader&gt;css :%s/;\s*\([a-z*_-}]\)/;\r\1/ge&lt;cr&gt;:%s/\(\w\)\s*{\([^\r]\)/\1\ {\r\2/ge&lt;cr&gt;:%s/:\(\w\)/:\ \1/ge&lt;cr&gt;:%s/}\(\w\\|#\\|\.\)/}\r\1/ge&lt;cr&gt;,=
 </li>
 </ol>
+
+<p>
+<strong>你可能不知道的快速编辑快捷键：</strong>
+<code>gv</code>          选中之前选中过的内容
+<code>g~{motion}</code>  切换{motion}跨越的文本的大小写
+<code>g~~</code>         切换当前行的大小写
+<code>gU{motion}</code>  切换为大写   
+<code>gu{motion}</code>  切换为小写
+</p>
+
 
 <h3 id="toc_1.5.3">使用 Vim Script</h3>
 <ol>

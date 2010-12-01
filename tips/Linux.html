@@ -28,6 +28,24 @@
 <h2 id="toc_1.1">小贴士</h2>
 <p>
 <code>tar zxvf file.tar.gz -C /target/dir</code> 可以解压 tar 包到指定目录。
+<code>tar jxvf file.tar.gz2</code>  解压 tar.gz2 文件。
+</p>
+
+<p>
+Debian 和 Ubuntu 下安装语言包：
+</p>
+<blockquote>
+$ cd /usr/share/locales
+$ ./install-language-pack zh_CN
+$ dpkg-reconfigure locales
+</blockquote>
+
+<p>
+也有可能直接 <code>dpkg-reconfigure locales</code> 就出来一个安装语言包的命令。
+</p>
+
+<p>
+如果问题还是没有解决，<a href="http://hosanna-cn.blogspot.com/2009/03/locale-cannot-set-lcctype-to-default.html">点这里</a>！
 </p>
 
 <h2 id="toc_1.2">疑难杂症</h2>
