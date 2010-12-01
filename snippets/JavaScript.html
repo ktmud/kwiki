@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JavaScript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../style.css" />
+<script>var root_path = '../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" rel="alternate" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../tips/">经验总结</a>
+		</li>
+		<li>
+			<a href="../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<h2 id="toc_0.1">监控代码性能</h2>
+<pre class="brush: javascript">
+var log = function(msg){
+     if(window.console){
+            var now = new Date - 0;
+            var last = arguments.callee.last;
+             if(typeof last === "number"){
+               window.console.log(msg +"        :       "+(now-last)+" ms");
+            }
+            arguments.callee.last = now;
+     }
+}
+</pre>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>

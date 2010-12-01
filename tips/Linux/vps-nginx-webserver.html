@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>vps-nginx-webserver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../../style.css" />
+<script>var root_path = '../../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" rel="alternate" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../../tips/">经验总结</a>
+		</li>
+		<li>
+			<a href="../../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<h1 id="toc_1">在 VPS 上用 nginx + php-fpm + mysql 搭建网络服务</h1>
+<p>
+最近在折腾 VPS ，实在厌倦了每次配置时都要 google 一下，把配置步骤记录下来，也欢迎高手们指教。
+</p>
+
+<h2 id="toc_1.1">准备</h2>
+<p>
+首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，便宜啊。
+然后在主机上建立存放安装包的目录：
+</p>
+<pre class="brush: bash">
+mkdir ~/packa
+cd ~/packa
+</pre>
+
+<h2 id="toc_1.2">安装 nginx</h2>
+<p>
+从 <a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a> 下载最新版，本文写成时的最新版是0.8.53，所以：
+</p>
+<pre class="brush: bash">
+wget http://nginx.org/download/nginx-0.8.53.tar.gz
+tar -zxvf nginx-0.8.53.tar.gz 
+cd nginx-0.8.53
+</pre>
+
+<p>
+为了装逼，我们先修改一下 nginx 源码，使其发出的 Header 里的 server 信息带上我们自己的个性化烙印。
+</p>
+<pre class="brush: bash">
+vim src/core/nginx.h
+</pre>
+
+<p>
+修改 <code>#define NGINX_VER</code> 这一行为你想要的！ Like :
+</p>
+<blockquote>
+#define NGINX_VER          "Peace in Heart (nginx/" NGINX_VERSION ")"
+</blockquote>
+
+<p>
+或者： <a href="http://stackoverflow.com/questions/246227/how-do-you-change-server-tag-for-nginx">http://stackoverflow.com/questions/246227/how-do-you-change-server-tag-for-nginx</a>
+</p>
+
+<p>
+根据 <a href="http://wiki.nginx.org/NginxChsInstallOptions">nginx 官方维基</a> 的介绍以及自己的需求，使用如下编译选项：
+</p>
+<pre class="brush: bash">
+  ./configure \
+  --prefix=/usr \
+  --conf-path=/etc/nginx/nginx.conf \
+  --http-log-path=/var/log/nginx/access_log \
+  --error-log-path=/var/log/nginx/error_log \
+  --pid-path=/var/run/nginx.pid \
+  --http-client-body-temp-path=/var/tmp/nginx/client \
+  --http-proxy-temp-path=/var/tmp/nginx/proxy \
+  --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+  --with-md5-asm \
+  --with-sha1-asm \
+  --with-sha1=/usr/include \
+  --with-http_realip_module \
+  --with-http_ssl_module \
+  --with-http_flv_module \
+  --with-http_gzip_static_module \
+  --with-http_perl_module \
+  --with-http_stub_status_module
+</pre>
+
+<p>
+如果提示缺少倚赖（比如说 pcre ），安装相应软件包即可。比如 Ubuntu 下的 PCRE 是这样：
+</p>
+<blockquote>
+apt-get install libpcre3 libpcre3-dev
+</blockquote>
+    
+<p>
+openssl 是这样：
+</p>
+<blockquote>
+apt-get install libssl-dev
+</blockquote>
+
+<p>
+用 yum 需要这些：
+</p>
+<blockquote>
+yum install pcre-devel perl-devel
+</blockquote>
+
+<p>
+其中 perl-devel 是如果你上面添加了 <code>--with-http_perl_module</code> 才有需要。
+</p>
+
+<p>
+这些乱七八糟的发行版本，连软件包都没有一个统一的名字，还可真是麻烦啊。
+</p>
+
+<p>
+然后就可以 <code>make &amp;&amp; make install</code> 。
+</p>
+
+<p>
+接下来就可以编辑 <code>/etc/nginx/nginx.conf</code> ，修改你的 nginx 配置了。
+</p>
+
+<p>
+用 ArchLinux 编译的时候，一切都很顺，用 Ubuntu 就老是出错... 哎～ 其实这里有一个教程来着：
+<a href="http://forum.ubuntu.org.cn/viewtopic.php?t=241301">http://forum.ubuntu.org.cn/viewtopic.php?t=241301</a>
+</p>
+
+<h2 id="toc_1.3">安装 php</h2>
+
+<p>
+php 编译选项如下
+</p>
+<pre class="brush: bash">
+./configure \
+ '--prefix=/usr/local/webserver/php'\
+ '--sysconfdir=/etc/php'\
+ '--localstatedir=/var'\
+ '--with-layout=GNU'\
+ '--with-config-file-path=/etc/php'\
+ '--with-config-file-scan-dir=/etc/php/conf.d'\
+ '--enable-inline-optimization'\
+ '--disable-debug'\
+ '--disable-rpath'\
+ '--disable-static'\
+ '--enable-shared'\
+ '--mandir=/usr/share/man'\
+ '--without-pear'\
+ '--disable-cli'\
+ '--enable-fpm'\
+ '--with-libevent-dir=/usr'\
+ '--with-fpm-user=www'\
+ '--with-fpm-group=www'\
+ '--enable-cli'\
+ '--enable-bcmath=shared'\
+ '--enable-calendar=shared'\
+ '--enable-exif=shared'\
+ '--enable-ftp=shared'\
+ '--enable-gd-native-ttf'\
+ '--enable-json=shared'\
+ '--enable-mbregex'\
+ '--enable-mbstring'\
+ '--enable-pdo=shared'\
+ '--enable-phar=shared'\
+ '--enable-posix=shared'\
+ '--enable-session'\
+ '--enable-shmop=shared'\
+ '--enable-soap=shared'\
+ '--enable-sockets=shared'\
+ '--enable-sysvmsg=shared'\
+ '--enable-sysvsem=shared'\
+ '--enable-sysvshm=shared'\
+ '--enable-xml'\
+ '--enable-zip=shared'\
+ '--with-bz2=shared'\
+ '--with-curl=shared'\
+ '--with-enchant=shared,/usr'\
+ '--with-freetype-dir=shared,/usr'\
+ '--with-gd=shared'\
+ '--with-gdbm=shared'\
+ '--with-gettext=shared'\
+ '--with-gmp=shared'\
+ '--with-iconv=shared'\
+ '--with-iconv-dir=/usr/local/lib'\
+ '--with-imap-ssl=shared'\
+ '--with-imap=shared'\
+ '--with-kerberos'\
+ '--with-jpeg-dir=shared,/usr'\
+ '--with-ldap=shared'\
+ '--with-ldap-sasl'\
+ '--with-mcrypt=shared'\
+ '--with-mhash'\
+ '--with-mysql=shared,mysqlnd'\
+ '--with-mysqli=shared,mysqlnd'\
+ '--with-sqlite=shared'\
+ '--with-pdo-mysql=shared,mysqlnd'\
+ '--with-pdo-sqlite=shared'\
+ '--with-openssl=shared'\
+ '--with-pcre-regex=/usr'\
+ '--with-png-dir=shared,/usr'\
+ '--with-regex=php'\
+ '--with-xmlrpc=shared'\
+ '--with-zlib'
+
+make ZEND_EXTRA_LIBS='-liconv'
+</pre>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>
