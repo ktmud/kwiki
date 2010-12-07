@@ -259,7 +259,8 @@ $ git push web +master:refs/heads/master
 </p>
 
 <p>
-不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ <code>git push web gh-pages</code> ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 <code>git checkout gh-pages</code> 即可。
+不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ <code>git push web gh-pages</code> ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 <code>git checkout gh-pages</code> 即可。如果遇到 'fatal: This operation must be run in a work tree
+' 这样的错误提示，你还可以直接修改 HEAD 文件，把最后的 master 改为 gh-pages 即可。
 </p>
 
 <p>
