@@ -300,6 +300,19 @@ NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
 <code>gu{motion}</code>  切换为小写
 </p>
 
+<p>
+不小心打开了一个需要 sudo 权限才能保存的文件，但是编辑了一大半才发现？下面的命令可以救急：
+</p>
+<blockquote>
+:w !sudo tee %
+</blockquote>
+
+<p>
+也可以做一个命令映射，安静地保存：
+</p>
+<blockquote>
+command W w !sudo tee % &gt; /dev/null
+</blockquote>
 
 <h3 id="toc_1.5.3">使用 Vim Script</h3>
 <ol>
