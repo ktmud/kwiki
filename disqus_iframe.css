@@ -1,7 +1,8 @@
-html {
+body {
     background-color: #133144;
 }
 textarea {
+    background-color: #133144;
     padding: 5px;
     resize: none;
     color: #fff;
