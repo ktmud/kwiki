@@ -1,9 +1,9 @@
 body {
     background-color: #133144;
 }
-textarea {
+html textarea {
     background-color: #133144;
-    padding: 10px;
+    padding: 5px;
     resize: none;
     color: #fff;
     overflow: hidden;
