@@ -3,7 +3,7 @@ body {
 }
 textarea {
     background-color: #133144;
-    padding: 5px;
+    padding: 10px;
     resize: none;
     color: #fff;
     overflow: hidden;
