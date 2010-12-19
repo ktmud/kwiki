@@ -2,6 +2,7 @@ body {
     background-color: #133144;
 }
 html textarea {
+    display: block;
     background-color: #133144;
     width: auto;
     padding: 5px;
