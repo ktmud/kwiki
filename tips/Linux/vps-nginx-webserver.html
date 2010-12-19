@@ -29,6 +29,10 @@
 最近在折腾 VPS ，实在厌倦了每次配置时都要 google 一下，把配置步骤记录下来，也欢迎高手们指教。
 </p>
 
+<p>
+我们需要参照这篇文章： <a href="http://blog.s135.com/nginx_php_v6/">http://blog.s135.com/nginx_php_v6/</a>
+</p>
+
 <h2 id="toc_1.1">准备</h2>
 <p>
 首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，便宜啊。
@@ -39,16 +43,18 @@ mkdir ~/packa
 cd ~/packa
 </pre>
 
-<h2 id="toc_1.2">安装 nginx</h2>
 <p>
-从 <a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a> 下载最新版，本文写成时的最新版是0.8.53，所以：
+下载安装包：
 </p>
 <pre class="brush: bash">
-wget http://nginx.org/download/nginx-0.8.53.tar.gz
-tar -zxvf nginx-0.8.53.tar.gz 
-cd nginx-0.8.53
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.8.tar.gz/from/http://mysql.he.net/
+wget http://nginx.org/download/nginx-0.8.54.tar.gz
+wget http://cn.php.net/get/php-5.3.4.tar.bz2/from/us2.php.net/mirror
+svn checkout http://code.taobao.org/svn/nginx_concat_module/trunk/ nginx_concat_module
 </pre>
 
+<h2 id="toc_1.2">安装 nginx</h2>
 <p>
 为了装逼，我们先修改一下 nginx 源码，使其发出的 Header 里的 server 信息带上我们自己的个性化烙印。
 </p>
@@ -72,10 +78,12 @@ vim src/core/nginx.h
 </p>
 <pre class="brush: bash">
   ./configure \
-  --prefix=/usr \
+  --prefix=/usr/local/webserver/nginx \
+  --user=www \
+  --group=www \
   --conf-path=/etc/nginx/nginx.conf \
-  --http-log-path=/var/log/nginx/access_log \
-  --error-log-path=/var/log/nginx/error_log \
+  --http-log-path=/srv/log/nginx/access_log \
+  --error-log-path=/srv/log/nginx/error_log \
   --pid-path=/var/run/nginx.pid \
   --http-client-body-temp-path=/var/tmp/nginx/client \
   --http-proxy-temp-path=/var/tmp/nginx/proxy \
@@ -87,9 +95,17 @@ vim src/core/nginx.h
   --with-http_ssl_module \
   --with-http_flv_module \
   --with-http_gzip_static_module \
-  --with-http_perl_module \
-  --with-http_stub_status_module
+  --with-http_stub_status_module \
+  --add-module=/root/packa/nginx_concat_module
 </pre>
+
+<p>
+如果要安装 perl 模块，则至少还需要 perl-ExtUtils-Embed perl-URI 。否则编译/运行时会报错。
+</p>
+
+<p>
+add-module 那里添加的是淘宝的文件combo模块。详细了解请点此： <a href="http://code.taobao.org/project/view/59/">http://code.taobao.org/project/view/59/</a>
+</p>
 
 <p>
 如果提示缺少倚赖（比如说 pcre ），安装相应软件包即可。比如 Ubuntu 下的 PCRE 是这样：
@@ -155,22 +171,20 @@ php 编译选项如下
  '--without-pear'\
  '--disable-cli'\
  '--enable-fpm'\
- '--with-libevent-dir=/usr'\
  '--with-fpm-user=www'\
  '--with-fpm-group=www'\
  '--enable-cli'\
+ '--enable-mbregex'\
+ '--enable-session'\
  '--enable-bcmath=shared'\
  '--enable-calendar=shared'\
  '--enable-exif=shared'\
  '--enable-ftp=shared'\
- '--enable-gd-native-ttf'\
  '--enable-json=shared'\
- '--enable-mbregex'\
- '--enable-mbstring'\
+ '--enable-mbstring=shared'\
  '--enable-pdo=shared'\
  '--enable-phar=shared'\
  '--enable-posix=shared'\
- '--enable-session'\
  '--enable-shmop=shared'\
  '--enable-soap=shared'\
  '--enable-sockets=shared'\
@@ -182,7 +196,9 @@ php 编译选项如下
  '--with-bz2=shared'\
  '--with-curl=shared'\
  '--with-freetype-dir=shared,/usr'\
+ '--with-mcrypt=shared'\
  '--with-gd=shared'\
+ '--enable-gd-native-ttf'\
  '--with-gettext=shared'\
  '--with-gmp=shared'\
  '--with-iconv=shared'\
@@ -193,7 +209,6 @@ php 编译选项如下
  '--with-jpeg-dir=shared,/usr'\
  '--with-ldap=shared'\
  '--with-ldap-sasl'\
- '--with-mcrypt=shared'\
  '--with-mhash'\
  '--with-mysql=shared,mysqlnd'\
  '--with-mysqli=shared,mysqlnd'\
@@ -205,9 +220,82 @@ php 编译选项如下
  '--with-png-dir=shared,/usr'\
  '--with-regex=php'\
  '--with-xmlrpc=shared'\
- '--with-zlib'
+ '--with-zlib=shared'
 
 make ZEND_EXTRA_LIBS='-liconv'
+</pre>
+
+<p>
+实现需要安装的包有 libevent-devel gmp-devel libc-client-devel libmcrypt-devel libiconv(需自己编译安装) ... 
+</p>
+
+<h3 id="toc_1.3.1">编译 PHP 的疑难解答</h3>
+
+<p>
+1. 遭遇  error while loading shared libraries: libiconv.so.2: cannot open shared object file: No such file or directory 
+</p>
+
+<p>
+<strong>解决办法</strong>:
+</p>
+<ol>
+<li>
+在 <code>/etc/ld.so.conf</code> 中加一行 <code>/usr/local/lib</code>
+</li>
+<li>
+运行 <code>/sbin/ldconfig</code>
+</li>
+</ol>
+
+<p>
+2. 遇到 mcrypt 的错误：
+</p>
+<pre>
+/usr/bin/ld: cannot find -lltdl
+collect2: ld returned 1 exit status
+make: *** [ext/mcrypt/mcrypt.la] 错误 1
+</pre>
+
+<p>
+<strong>解决办法</strong>:
+</p>
+<pre>
+wget "http://downloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.gz?modtime=1171868460&amp;big_mirror=0"
+tar zxvf libmcrypt-2.5.8.tar.gz 
+cd libmcrypt-2.5.8/
+./configure
+make
+make install
+/sbin/ldconfig
+cd libltdl/
+./configure --enable-ltdl-install
+make
+make install
+cd ../../
+</pre>
+
+
+<h2 id="toc_1.4">安装 eaccelerator 等 php 加速模块</h2>
+<pre>
+wget http://pecl.php.net/get/memcache-2.2.6.tgz
+wget http://bart.eaccelerator.net/source/0.9.6.1/eaccelerator-0.9.6.1.tar.bz2
+</pre>
+
+<p>
+然后分别解压，在各自目录里执行：
+</p>
+<pre>
+phpize
+./configure
+make
+make install
+</pre>
+
+<p>
+需要注意的是，  eaccelerator 的编译选项需要为：
+</p>
+<pre>
+./configure --enable-eaccelerator=shared
 </pre>
 </div>
 <div id="footer">
