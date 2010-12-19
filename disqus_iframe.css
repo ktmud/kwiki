@@ -3,6 +3,7 @@ body {
 }
 html textarea {
     background-color: #133144;
+    width: auto;
     padding: 5px;
     resize: none;
     color: #fff;
