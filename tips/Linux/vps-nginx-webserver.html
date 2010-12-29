@@ -30,13 +30,16 @@
 </p>
 
 <p>
-我们需要参照这篇文章： <a href="http://blog.s135.com/nginx_php_v6/">http://blog.s135.com/nginx_php_v6/</a>
+以下步骤参照了这篇文章： <a href="http://blog.s135.com/nginx_php_v6/">http://blog.s135.com/nginx_php_v6/</a>  在 Fedora 下编译通过， CentOS 应该也没问题， Ubuntu 和 Archlinux 之类，只要把相关依赖软件包装好，应该也没什么问题。由于各家 VPS 商提供的系统镜像模板不一样，有些必要的包你可能没有，可能有，这就只能视具体情况而定了。
 </p>
 
 <h2 id="toc_1.1">准备</h2>
 <p>
-首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，便宜啊。
-然后在主机上建立存放安装包的目录：
+首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，它家的 Xen 主机性价比很高。速度是我用过最快的，完成下面所有步骤基本上只需要半小时。
+</p>
+
+<p>
+先主机上建立存放安装包的目录：
 </p>
 <pre class="brush: bash">
 mkdir ~/packa
@@ -54,9 +57,17 @@ wget http://cn.php.net/get/php-5.3.4.tar.bz2/from/us2.php.net/mirror
 svn checkout http://code.taobao.org/svn/nginx_concat_module/trunk/ nginx_concat_module
 </pre>
 
+<p>
+安装依赖：
+</p>
+<pre>
+yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
+yum -y install pcre-devel perl-devel svn git bison cmake ccmake gmp-devel pam-devel libc-client-devel
+</pre>
+
 <h2 id="toc_1.2">安装 nginx</h2>
 <p>
-为了装逼，我们先修改一下 nginx 源码，使其发出的 Header 里的 server 信息带上我们自己的个性化烙印。
+为了装逼，我们修改一下 nginx 源码，使其发出的 Header 里的 server 信息带上我们自己的个性化烙印。
 </p>
 <pre class="brush: bash">
 vim src/core/nginx.h
@@ -73,8 +84,42 @@ vim src/core/nginx.h
 或者： <a href="http://stackoverflow.com/questions/246227/how-do-you-change-server-tag-for-nginx">http://stackoverflow.com/questions/246227/how-do-you-change-server-tag-for-nginx</a>
 </p>
 
+<h3 id="toc_1.2.1">更装逼的自动索引页</h3>
 <p>
-根据 <a href="http://wiki.nginx.org/NginxChsInstallOptions">nginx 官方维基</a> 的介绍以及自己的需求，使用如下编译选项：
+对于没有 index.html 之类默认首页的目录， Nginx 也可以提供自动索引。只需在配置文件里面加以局 <code>autoindex on;</code> 即可。
+</p>
+
+<p>
+我们可以修改默认的索引页，让它变得漂亮一点。打开 <strong>/src/http/modules/ngx_http_autoindex_module.c</strong> ， 从第118行开始修改：
+</p>
+<pre>
+static u_char title[] =
+"&lt;!doctype html&gt;" CRLF
+"&lt;html&gt;" CRLF
+"&lt;head&gt;&lt;title&gt;来看看这个目录： "
+;
+
+
+static u_char header[] =
+"&lt;/title&gt;" CRLF
+"&lt;style type=\"text/css\"&gt; body {    width: 86%;    min-width: 750px;    max-width: 1120px;    margin: 20px auto;    font: 100 17px/1 'Courier New','Consolas','方正博雅宋_GBK','方正博雅宋','Yahei Mono',        '微软雅黑',sans-serif;    overflow: hidden;}h1{    font-size: 26px;    text-align: center;    color: #555;    background: -webkit-gradient(linear, 0 10%, 0 100%, from(#fff), to(#f9f8f7));;    text-           shadow: 0 2px 4px rgba(160,160,160,0.5);    border: 1px solid #9abc5f;    border-bottom: 3px double #e8e8e3;    border-radius: 8px 8px 0 0;    -moz-border-radius: 8px 8px 0 0;    padding: 18px 0 15px;        margin: 0;    -webkit-box-shadow: 0 -4px 12px #f0f0f0;    -moz-box-shadow: 0 -4px 12px #f0f0f0;}hr {    display: none;}pre {    margin: 0;    font: 100 15px/1.8 'Courier New','Consolas','方正博雅宋_GBK',     '方正博雅宋','Yahei Mono','微软雅黑',sans-serif;    border: solid #a7c56f;    border-width: 0 1px;    height: 2000px;    padding: 30px;    -webkit-box-shadow: 0 10px 16px #e6e6e6;    -moz-box-shadow: 0       10px 16px #e6e6e6;}a {    color: #207210;    text-shadow: 0 1px 0 #efefe0;    text-decoration: none;    padding: 0.2em 0.4em;    border: 1px solid transparent;}a:hover {    background: #290;    color:        #fff;    text-shadow: 0 0 0;    border: 1px solid #370;    border-radius: 2px;    -moz-border-radius: 2px;}#footer {    position: fixed;    width: 50%;    padding: 15px 0;    left: 25%;    bottom:            20px;    color: #666;    background: rgba(255,255,255,0.8);    text-align: center;    border: 1px solid #ccc;    border-radius: 2px 2px 6px 6px;    -moz-border-radius: 2px 2px 6px 6px;    -webkit-box-        shadow: 0 1px 4px #ccc;    -moz-box-shadow: 0 1px 4px #ccc;}&lt;/style&gt;" CRLF
+"&lt;/head&gt;" CRLF
+"&lt;body&gt;" CRLF
+"<h1>索引："
+;
+
+static u_char tail[] = 
+"<div id=\"footer\">&amp;copy; &lt;a href=\"https://twitter.com/ktmud\">@ktmud&lt;/a></div>&lt;/body>" CRLF 
+"&lt;/html&gt;" CRLF 
+;
+</pre>
+
+<p>
+那个 footer 里的版权信息你可以自己根据需要修改哈。
+</p>
+
+<p>
+然后，根据 <a href="http://wiki.nginx.org/NginxChsInstallOptions">nginx 官方维基</a> 的介绍以及自己的需求，使用如下编译选项：
 </p>
 <pre class="brush: bash">
   ./configure \
@@ -96,15 +141,16 @@ vim src/core/nginx.h
   --with-http_flv_module \
   --with-http_gzip_static_module \
   --with-http_stub_status_module \
+  --with-ld-opt='-ltcmalloc_minimal' \
   --add-module=/root/packa/nginx_concat_module
 </pre>
 
 <p>
-如果要安装 perl 模块，则至少还需要 perl-ExtUtils-Embed perl-URI 。否则编译/运行时会报错。
+注意最后一行， add-module ，这里添加的是淘宝的文件combo模块。详细了解请点此： <a href="http://code.taobao.org/project/view/59/">http://code.taobao.org/project/view/59/</a>
 </p>
 
 <p>
-add-module 那里添加的是淘宝的文件combo模块。详细了解请点此： <a href="http://code.taobao.org/project/view/59/">http://code.taobao.org/project/view/59/</a>
+如果要安装 perl 模块，则至少还需要 perl-ExtUtils-Embed perl-URI 。否则编译/运行时会报错。
 </p>
 
 <p>
@@ -122,17 +168,6 @@ apt-get install libssl-dev
 </blockquote>
 
 <p>
-用 yum 需要这些：
-</p>
-<blockquote>
-yum install pcre-devel perl-devel
-</blockquote>
-
-<p>
-其中 perl-devel 是如果你上面添加了 <code>--with-http_perl_module</code> 才有需要。
-</p>
-
-<p>
 这些乱七八糟的发行版本，连软件包都没有一个统一的名字，还可真是麻烦啊。
 </p>
 
@@ -144,12 +179,16 @@ yum install pcre-devel perl-devel
 接下来就可以编辑 <code>/etc/nginx/nginx.conf</code> ，修改你的 nginx 配置了。
 </p>
 
+<h2 id="toc_1.3">安装 MySQL</h2>
 <p>
-用 ArchLinux 编译的时候，一切都很顺，用 Ubuntu 就老是出错... 哎～ 其实这里有一个教程来着：
-<a href="http://forum.ubuntu.org.cn/viewtopic.php?t=241301">http://forum.ubuntu.org.cn/viewtopic.php?t=241301</a>
+我们下载的是 5.5.8 ，需要使用 cmake 安装。解压后首先执行 <code>ccmake .</code> ，调整一些配置选项，比如安装目录之类。第一次运行 ccmake , 需要按 <kbd>g</kbd> 执行一次生成配置文件的操作。然后才可以更改选项。按 Enter 修改，具体选项请参考[MySQL官方文档 <a href="http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html">http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html</a>]。
 </p>
 
-<h2 id="toc_1.3">安装 php</h2>
+<p>
+修改完成后，按 <kbd>c</kbd> 再次 configure， configure 成功后按 e 退出提示信息，然后按 g 生成配置并退出。退出后还需要执行 <code>cmake .</code> 才能 <code>make</code> 。
+</p>
+
+<h2 id="toc_1.4">安装 php</h2>
 
 <p>
 php 编译选项如下
@@ -226,10 +265,16 @@ make ZEND_EXTRA_LIBS='-liconv'
 </pre>
 
 <p>
-实现需要安装的包有 libevent-devel gmp-devel libc-client-devel libmcrypt-devel libiconv(需自己编译安装) ... 
+安装完成后， 链接可执行文件
 </p>
+<pre>
+ln -sf /usr/local/webserver/nginx/sbin/nginx /usr/sbin/nginx
+ln -sf /usr/local/webserver/php/bin/phpize /usr/sbin/phpize
+ln -sf /usr/local/webserver/php/bin/php-config /usr/sbin/php-config
+ln -sf /usr/local/webserver/php/sbin/php-fpm /usr/sbin/php-fpm
+</pre>
 
-<h3 id="toc_1.3.1">编译 PHP 的疑难解答</h3>
+<h3 id="toc_1.4.1">编译 PHP 的疑难解答</h3>
 
 <p>
 1. 遭遇  error while loading shared libraries: libiconv.so.2: cannot open shared object file: No such file or directory 
@@ -274,8 +319,7 @@ make install
 cd ../../
 </pre>
 
-
-<h2 id="toc_1.4">安装 eaccelerator 等 php 加速模块</h2>
+<h2 id="toc_1.5">安装 eaccelerator 等 php 加速模块</h2>
 <pre>
 wget http://pecl.php.net/get/memcache-2.2.6.tgz
 wget http://bart.eaccelerator.net/source/0.9.6.1/eaccelerator-0.9.6.1.tar.bz2
@@ -295,7 +339,27 @@ make install
 需要注意的是，  eaccelerator 的编译选项需要为：
 </p>
 <pre>
-./configure --enable-eaccelerator=shared
+./configure --enable-eaccelerator=shared --with-php-config=/usr/local/webserver/php/bin/php-config
+</pre>
+
+<h2 id="toc_1.6">运行前的准备工作</h2>
+<p>
+添加用户
+</p>
+<pre>
+useradd git -d /srv/git
+useradd mysql -d /srv/mysql
+useradd www -d /srv/http
+</pre>
+<p>
+搭配运行环境
+</p>
+<pre>
+mkdir /var/tmp/nginx
+mkdir /var/run/nginx
+mkdir /var/run/php-fpm
+mkdir /tmp/eaccelerator_cache
+chown www -R /tmp/eaccelerator_cache
 </pre>
 </div>
 <div id="footer">
