@@ -92,27 +92,30 @@ vim src/core/nginx.h
 <p>
 我们可以修改默认的索引页，让它变得漂亮一点。打开 <strong>/src/http/modules/ngx_http_autoindex_module.c</strong> ， 从第118行开始修改：
 </p>
-<pre>
+<blockquote>
+<code>
 static u_char title[] =
 "&lt;!doctype html&gt;" CRLF
 "&lt;html&gt;" CRLF
 "&lt;head&gt;&lt;title&gt;来看看这个目录： "
 ;
-
-
+</blockquote>
+<blockquote>
 static u_char header[] =
 "&lt;/title&gt;" CRLF
 "&lt;style type=\"text/css\"&gt; body {    width: 86%;    min-width: 750px;    max-width: 1120px;    margin: 20px auto;    font: 100 17px/1 'Courier New','Consolas','方正博雅宋_GBK','方正博雅宋','Yahei Mono',        '微软雅黑',sans-serif;    overflow: hidden;}h1{    font-size: 26px;    text-align: center;    color: #555;    background: -webkit-gradient(linear, 0 10%, 0 100%, from(#fff), to(#f9f8f7));;    text-           shadow: 0 2px 4px rgba(160,160,160,0.5);    border: 1px solid #9abc5f;    border-bottom: 3px double #e8e8e3;    border-radius: 8px 8px 0 0;    -moz-border-radius: 8px 8px 0 0;    padding: 18px 0 15px;        margin: 0;    -webkit-box-shadow: 0 -4px 12px #f0f0f0;    -moz-box-shadow: 0 -4px 12px #f0f0f0;}hr {    display: none;}pre {    margin: 0;    font: 100 15px/1.8 'Courier New','Consolas','方正博雅宋_GBK',     '方正博雅宋','Yahei Mono','微软雅黑',sans-serif;    border: solid #a7c56f;    border-width: 0 1px;    height: 2000px;    padding: 30px;    -webkit-box-shadow: 0 10px 16px #e6e6e6;    -moz-box-shadow: 0       10px 16px #e6e6e6;}a {    color: #207210;    text-shadow: 0 1px 0 #efefe0;    text-decoration: none;    padding: 0.2em 0.4em;    border: 1px solid transparent;}a:hover {    background: #290;    color:        #fff;    text-shadow: 0 0 0;    border: 1px solid #370;    border-radius: 2px;    -moz-border-radius: 2px;}#footer {    position: fixed;    width: 50%;    padding: 15px 0;    left: 25%;    bottom:            20px;    color: #666;    background: rgba(255,255,255,0.8);    text-align: center;    border: 1px solid #ccc;    border-radius: 2px 2px 6px 6px;    -moz-border-radius: 2px 2px 6px 6px;    -webkit-box-        shadow: 0 1px 4px #ccc;    -moz-box-shadow: 0 1px 4px #ccc;}&lt;/style&gt;" CRLF
 "&lt;/head&gt;" CRLF
 "&lt;body&gt;" CRLF
-"<h1>索引："
+"&lt;h1&gt;索引："
 ;
-
+</blockquote>
+<blockquote>
 static u_char tail[] = 
-"<div id=\"footer\">&amp;copy; &lt;a href=\"https://twitter.com/ktmud\">@ktmud&lt;/a></div>&lt;/body>" CRLF 
+"<div id=\"footer\">&amp;copy; &lt;a href=\"<a href="https://twitter.com/ktmud\">https://twitter.com/ktmud\</a>">@ktmud&lt;/a></div>&lt;/body>" CRLF 
 "&lt;/html&gt;" CRLF 
 ;
-</pre>
+<code>
+</blockquote>
 
 <p>
 那个 footer 里的版权信息你可以自己根据需要修改哈。
