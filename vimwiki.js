@@ -156,6 +156,7 @@ $(document).ready(function() {
                   'js jscript javascript  http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js',
                   'php http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPhp.js',
                   'css CSS Css http://alexgorbatchev.com/pub/sh/current/scripts/shBrushCss.js',
+                  'c cpp http://alexgorbatchev.com/pub/sh/current/scripts/shBrushCpp.js',
                   'Bash bash http://alexgorbatchev.com/pub/sh/current/scripts/shBrushBash.js'
                 );
                  
