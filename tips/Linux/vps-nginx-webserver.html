@@ -41,7 +41,7 @@
 <p>
 先主机上建立存放安装包的目录：
 </p>
-<pre class="brush: bash">
+<pre class="brush: plain">
 mkdir ~/packa
 cd ~/packa
 </pre>
@@ -60,10 +60,12 @@ svn checkout http://code.taobao.org/svn/nginx_concat_module/trunk/ nginx_concat_
 <p>
 安装依赖：
 </p>
-<pre class="brush: bash">
-    yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
-    yum -y install pcre-devel perl-devel svn git bison cmake ccmake gmp-devel pam-devel libc-client-devel
-</pre>
+<blockquote>
+yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
+</blockquote>
+<blockquote>
+yum -y install pcre-devel perl-devel svn git bison cmake ccmake gmp-devel pam-devel libc-client-devel
+</blockquote>
 
 <h2 id="toc_1.2">安装 nginx</h2>
 <p>
@@ -92,13 +94,12 @@ vim src/core/nginx.h
 <p>
 我们可以修改默认的索引页，让它变得漂亮一点。打开 <strong>/src/http/modules/ngx_http_autoindex_module.c</strong> ， 从第118行开始修改：
 </p>
-<pre class="brush: c">
+<pre class="brush: cpp">
 static u_char title[] =
 "&lt;!doctype html&gt;" CRLF
 "&lt;html&gt;" CRLF
 "&lt;head&gt;&lt;title&gt;来看看这个目录： "
 ;
-
 
 static u_char header[] =
 "&lt;/title&gt;" CRLF
