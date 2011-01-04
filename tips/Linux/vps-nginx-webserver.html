@@ -35,9 +35,26 @@
 
 <h2 id="toc_1.1">准备</h2>
 <p>
-首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，它家的 Xen 主机性价比很高。速度是我用过最快的，完成下面所有步骤基本上只需要半小时。
+首先当然是要买一个 VPS ，新手推荐 <a href="http://www.yardvps.com/billing/aff.php?aff=122">YardVPS</a> ，它家的 Xen 主机性价比很高。速度是我用过最快的，完成下面所有步骤基本上只需要半小时（不过最近貌似有点抽风…）。
 </p>
 
+<p>
+安装依赖，对于 Fedora ：
+</p>
+<blockquote>
+yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
+</blockquote>
+<blockquote>
+yumnstall -y install pcre-devel perl-devel subversion git bison cmake ccmake gmp-devel pam-devel libc-client-devel automake libevent libevent-devel
+</blockquote>
+
+<p>
+对于 Debian lenny：
+</p>
+<blockquote>
+apt-get install libpcre3 libpcre3-dev libssl-dev bison cmake gawk flex gcc g++ autoconf make libpng12-dev libjpeg62-dev libfreetype6-dev ncurses-bin libncurses5-dev libncurses5 subversion git zlib1g-dev curl libcurl4-openssl-dev libxml2-dev bzip2 libbz2-dev libgmp3-dev libgmp3c2 libc-client-dev libsasl2-dev
+</blockquote>
+    
 <p>
 先主机上建立存放安装包的目录：
 </p>
@@ -56,16 +73,6 @@ wget http://nginx.org/download/nginx-0.8.54.tar.gz
 wget http://cn.php.net/get/php-5.3.4.tar.bz2/from/us2.php.net/mirror
 svn checkout http://code.taobao.org/svn/nginx_concat_module/trunk/ nginx_concat_module
 </pre>
-
-<p>
-安装依赖：
-</p>
-<blockquote>
-yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
-</blockquote>
-<blockquote>
-yum -y install pcre-devel perl-devel svn git bison cmake ccmake gmp-devel pam-devel libc-client-devel
-</blockquote>
 
 <h2 id="toc_1.2">安装 nginx</h2>
 <p>
@@ -92,7 +99,7 @@ vim src/core/nginx.h
 </p>
 
 <p>
-我们可以修改默认的索引页，让它变得漂亮一点。打开 <strong>/src/http/modules/ngx_http_autoindex_module.c</strong> ， 从第118行开始修改：
+我们可以修改默认的索引页，让它变得漂亮一点。打开 <strong>src/http/modules/ngx_http_autoindex_module.c</strong> ， 从第118行开始修改：
 </p>
 <pre class="brush: cpp">
 static u_char title[] =
@@ -141,34 +148,11 @@ static u_char tail[] =
   --with-http_flv_module \
   --with-http_gzip_static_module \
   --with-http_stub_status_module \
-  --with-ld-opt='-ltcmalloc_minimal' \
   --add-module=/root/packa/nginx_concat_module
 </pre>
 
 <p>
-注意最后一行， add-module ，这里添加的是淘宝的文件combo模块。详细了解请点此： <a href="http://code.taobao.org/project/view/59/">http://code.taobao.org/project/view/59/</a>
-</p>
-
-<p>
-如果要安装 perl 模块，则至少还需要 perl-ExtUtils-Embed perl-URI 。否则编译/运行时会报错。
-</p>
-
-<p>
-如果提示缺少倚赖（比如说 pcre ），安装相应软件包即可。比如 Ubuntu 下的 PCRE 是这样：
-</p>
-<blockquote>
-apt-get install libpcre3 libpcre3-dev
-</blockquote>
-    
-<p>
-openssl 是这样：
-</p>
-<blockquote>
-apt-get install libssl-dev
-</blockquote>
-
-<p>
-这些乱七八糟的发行版本，连软件包都没有一个统一的名字，还可真是麻烦啊。
+注意最后一行， add-module ，这里添加的是淘宝的文件combo模块(之前我们有通过 svn 命令checkout出来)。详细了解请点此： <a href="http://code.taobao.org/project/view/59/">http://code.taobao.org/project/view/59/</a>
 </p>
 
 <p>
@@ -180,8 +164,22 @@ apt-get install libssl-dev
 </p>
 
 <h2 id="toc_1.3">安装 MySQL</h2>
+
 <p>
-我们下载的是 5.5.8 ，需要使用 cmake 安装。解压后首先执行 <code>ccmake .</code> ，调整一些配置选项，比如安装目录之类。第一次运行 ccmake , 需要按 <kbd>g</kbd> 执行一次生成配置文件的操作。然后才可以更改选项。按 Enter 修改，具体选项请参考[MySQL官方文档 <a href="http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html">http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html</a>]。
+二话不说，先把 libiconv 装了（解压 ./configure  make install 即可）。
+</p>
+
+<p>
+我们下载的是 MYSQL 5.5.8 ，需要使用 cmake 安装。 cmake 在 fedora 里面可以直接 yum ，但对于 CentOS ， yum 一般是找不到它的，需要<a href="http://www.cmake.org/cmake/resources/software.html">自己下载</a>。 
+</p>
+<pre>
+    wget http://www.cmake.org/files/v2.8/cmake-2.8.3-Linux-i386.tar.gz
+    tar zxf cmake-2.8.3-Linux-i386.tar.gz
+    cd 
+</pre>
+
+<p>
+解压 mysql 后，在其目录下首先执行 <code>ccmake .</code> ，调整一些配置选项，比如安装目录之类。第一次运行 ccmake , 需要按 <kbd>g</kbd> 执行一次生成配置文件的操作。然后才可以更改选项。按 Enter 修改，具体选项请参考[MySQL官方文档 <a href="http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html">http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html</a>]。
 </p>
 
 <p>
@@ -360,6 +358,19 @@ mkdir /var/run/nginx
 mkdir /var/run/php-fpm
 mkdir /tmp/eaccelerator_cache
 chown www -R /tmp/eaccelerator_cache
+</pre>
+
+<p>
+为方便管理，在 .bashrc 里面添加 shorcut：
+</p>
+<pre>
+alias s='service'
+alias ll='ls -al'
+alias la='ls -a'
+alias phpf='/root/rc/rc.d/php-fpm'
+alias msq='/srv/mysql/mysqld'
+alias ephpi='vim /etc/php/php.ini'
+alias ephpf='vim /etc/php/php-fpm.conf'
 </pre>
 </div>
 <div id="footer">
