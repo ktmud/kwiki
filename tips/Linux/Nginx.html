@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nginx</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../../style.css" />
+<script>var root_path = '../../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" rel="alternate" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../../tips/">经验总结</a>
+		</li>
+		<li>
+			<a href="../../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<h2 id="toc_0.1">Nginx 入门</h2>
+<ol>
+<li>
+<a href="vps-nginx-webserver.html">在VPS编译安装 nginx + php-fpm 的步骤整理</a>
+</li>
+</ol>
+
+<h2 id="toc_0.2">疑难解决</h2>
+<h3 id="toc_0.2.1">nginx %document_root% 引发的 php 404 问题</h3>
+<p>
+需求是这样的，我需要在 nginx 中配置一个 phpmyadmin, 然后写了个 <strong>extra/phpmyadmin.conf</strong> 文件， include 到需要的网站中。比如说对于 ktmud.com 这个网站，有一个 <strong>sites/ktmud.com.conf</strong> 这个文件，内容如下：
+</p>
+<pre>
+server {
+    listen       80;
+    server_name  ktmud.com;
+
+    location / {
+        root   /srv/http/ktmud.com; 
+        index  index.html index.htm index.php;
+    }
+    
+    include extra/phpmyadmin.conf;
+    
+    location ~ /\.ht {
+        deny  all;
+    }
+}  
+</pre>
+
+<p>
+然后 <strong>extra/phpmyadmin.conf</strong> 的内容如下：
+</p>
+<pre>
+location /phpmyadmin {   
+    root    /usr/share/webapps;   
+    index   index.php;   
+}   
+ 
+location ~ \.php$ {   
+    set $php_root   $document_root;   
+    if ($request_uri ~* /phpmyadmin) {   
+        set $php_root /usr/share/webapps;   
+    }   
+ 
+    fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock; 
+    fastcgi_index  index.php;   
+    fastcgi_param  SCRIPT_FILENAME  $php_root$fastcgi_script_name;   
+    #fastcgi_param  HTTPS on; 
+    include  fastcgi_params; 
+}   
+</pre>
+
+<p>
+之后就发现访问 php 文件一片空白，并且返回状态码 404 。使用 rewrite 法 debug ，发现是传给 cgi 的 %document_root% 不对。它居然用了默认的 /usr/html/ 。看来在 <strong>ktmud.com.conf</strong> 这个文件里设定的 root 没有生效。然后 Google 了好大一会儿，才发现，这个 root 不能写在 Location 里！他只在 <code>Location / {} </code> 这块大括号里生效！解决办法当然是去掉 <code>Location /</code> 咯!
+</p>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>

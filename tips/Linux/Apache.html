@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Apache</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../../style.css" />
+<script>var root_path = '../../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" rel="alternate" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../../tips/">经验总结</a>
+		</li>
+		<li>
+			<a href="../../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<h2 id="toc_0.1">启用 Apache 的 modconcat 节约css和js资源请求链接</h2>
+<p>
+淘宝 CDN 有个基于 nginx 的压缩模块，可以把多个 CSS 或 js 文件节约为一个 http 请求。比如现在的淘宝首页就有这样的地址：
+</p>
+<blockquote>
+<code>http://a.tbcdn.cn/p/fp/2010c/??fp-header-min.css,fp-base-min.css,fp-channel-min.css,fp-product-min.css,fp-mall-min.css,fp-category-min.css,fp-sub-min.css,fp-gdp4p-min.css,fp-css3-min.css,fp-misc-min.css?t=20101125.css</code>
+</blockquote>
+
+<p>
+之前说过，我们可以自己<a href="vps-nginx-webserver.html">编译一个 Nginx</a> ，启用这个功能。其实， nginx concat module 这个东西是从 apache 的 mod_concat 学来的(<a href="http://code.taobao.org/trac/nginx_concat_module/browser/trunk/README">via</a>)。对于那些不想单独编译一个 nginx 或者习惯了实用 apache 的同学，启用 apache 的 modconcat 显然成本更低。
+</p>
+
+<p>
+在 Apache 下启用 <a href="http://code.google.com/p/modconcat/">modconcat</a> 的步骤如下：
+</p>
+<ul>
+<li>
+checkout 下来 <a href="http://code.google.com/p/modconcat/">modconcat</a> 的源码：
+    svn checkout <a href="http://modconcat.googlecode.com/svn/trunk/">http://modconcat.googlecode.com/svn/trunk/</a> modconcat-read-only
+</li>
+<li>
+安装 apxs ， apache 模块的编译工具。比如在 Debian 和 Ubuntu 下，这东西被放在了 apache2-threaded-dev 和 apache2-prefork-dev 里。安装任一即可。于是乎：
+    sudo apt-get install apache2-prefork-dev
+</li>
+<li>
+编译 modconcat ( -c 代表 compile  -i 代表 install  -a 代表自动添加载入该模块的语句):
+    apxs -i -a -c mod_concat.c
+    或
+    apxs2 -i -a -c mod_concat.c
+</li>
+</ul>
+
+<ul>
+<li>
+修改 conf 文件，启用 modconcat (视具体系统而定)。
+</li>
+</ul>
+
+<p>
+为方便大家 copy ，把上面的步骤统一为：
+</p>
+<pre>
+svn checkout http://modconcat.googlecode.com/svn/trunk/ modconcat-read-only
+sudo apt-get install apache2-prefork-dev
+cd modconcat-read-only/mod_concat
+apxs -i -a -c mod_concat.c
+sudo mv /etc/apache2/mods-available/concat.load /etc/apache2/mods-enabled/
+sudo cp conf/concat.conf /etc/apache2/mods-enabled/
+sudo service apache2 restart
+</pre>
+
+<p>
+欧啦！ Ubuntu 和 Debian lenny 适用。
+</p>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>
