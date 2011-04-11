@@ -66,7 +66,7 @@
 
 <h2 id="toc_1.2">准备工作</h2>
 <p>
-请先在你的 vimrc 里定义变量 $VIMFILES 。比如说 Windows 下，我把 vimfiles 放在了 Vim 安装目录的 <code>vimfiles</code> 目录下：
+请先在你的 vimrc 里定义变量 $VIMFILES 。比如说 Windows 下，我把 vimfiles 放在了 Vim 安装目录的 <code>vimfiles</code> 目录下，而在其他操作系统是放在了用户主目录的 <code>.vim</code> 目录下：
 </p>
 <pre>
 if has("win32")
@@ -271,6 +271,10 @@ gjslint 唯一的遗憾就是“字数过多”这个限制太严格了，对于
 </li>
 <li>
 NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
+</li>
+<li>
+安装新插件后，如果插件提供了帮助文档（help doc），你可能需要重建帮助文件索引，命令如下：
+    :helptags $VIMFILES/doc
 </li>
 </ol>
 

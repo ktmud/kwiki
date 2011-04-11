@@ -45,8 +45,8 @@
 #disqus_thread #dsq-content .dsq-textarea .dsq-textarea-wrapper, #disqus_thread #dsq-content .dsq-input-wrapper {
     border: 1px solid #134;
     color: #eff;
-    background: #133144;
-    background: rgba(40,180,220,0.1);
+    background: #9cd;
+    background: rgba(40,180,220,0.6);
 }
 #dsq-content input.dsq-trackback-url {
     width: 25em;
