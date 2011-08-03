@@ -1,0 +1,47 @@
+== Nginx 入门 ==
+# [[vps-nginx-webserver|在VPS编译安装 nginx + php-fpm 的步骤整理]]
+
+== 疑难解决 ==
+=== nginx %document_root% 引发的 php 404 问题 ===
+需求是这样的，我需要在 nginx 中配置一个 phpmyadmin, 然后写了个 *extra/phpmyadmin.conf* 文件， include 到需要的网站中。比如说对于 ktmud.com 这个网站，有一个 *sites/ktmud.com.conf* 这个文件，内容如下：
+{{{
+server {
+    listen       80;
+    server_name  ktmud.com;
+
+    location / {
+        root   /srv/http/ktmud.com; 
+        index  index.html index.htm index.php;
+    }
+    
+    include extra/phpmyadmin.conf;
+    
+    location ~ /\.ht {
+        deny  all;
+    }
+}  
+}}}
+
+然后 *extra/phpmyadmin.conf* 的内容如下：
+{{{
+location /phpmyadmin {   
+    root    /usr/share/webapps;   
+    index   index.php;   
+}   
+ 
+location ~ \.php$ {   
+    set $php_root   $document_root;   
+    if ($request_uri ~* /phpmyadmin) {   
+        set $php_root /usr/share/webapps;   
+    }   
+ 
+    fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock; 
+    fastcgi_index  index.php;   
+    fastcgi_param  SCRIPT_FILENAME  $php_root$fastcgi_script_name;   
+    #fastcgi_param  HTTPS on; 
+    include  fastcgi_params; 
+}   
+}}}
+
+之后就发现访问 php 文件一片空白，并且返回状态码 404 。使用 rewrite 法 debug ，发现是传给 cgi 的 %document_root% 不对。它居然用了默认的 /usr/html/ 。看来在 *ktmud.com.conf* 这个文件里设定的 root 没有生效。然后 Google 了好大一会儿，才发现，这个 root 不能写在 Location 里！他只在 `Location / {} ` 这块大括号里生效！解决办法当然是去掉 `Location /` 咯!
+

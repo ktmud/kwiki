@@ -1,4 +1,17 @@
 = CSS =
 IE8不认 .selecto, .sel, {} 这样的CSS，注意最后多出来的那个逗号。
 
+== IE6 的最大宽度最大高度 ==
+利用 Expression , 并且只执行一次，完美性能。
+{{{
+#shopinfo img {
+  /* 'clear' is a dummy property */
+  _clear: expression( 
+     width > 180 ? width = 180 : true, 
+     height > 90 ? height = 90 : true,
+     style.clear = "none", 0
+  );
+}
+}}}
+
 %title 丘迟的维基 - CSS

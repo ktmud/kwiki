@@ -1,0 +1,14 @@
+= 2010-12-07 晴  有大风  较冷 =
+折腾啊，折腾...
+
+我觉得我应该养成每天记流水帐的好习惯。因为我实在太需要反省自己的时间都用在哪里去了。
+
+昨天说要整理搜索线的文件命名等规范，结果写到一半又去搞VPS去了。于是这两天基本上都在折腾VPS，你学到多少有价值的东西了么，我看未必。
+
+# 经过无数次验证，确认现在 Buyvm 上装 pptp VPN 是行不通的。Can't find the solution for 619 error.
+# 搞了个下自动备份。
+# 试用了一下 ClubUptime.com 的 VPS ，不尽如人意，最终放弃。还是留守要贵一半的 [http://www.yardvps.com/billing/aff.php?aff=122  Yard Xen Tree 1]。
+# 使用了 Kloxo ，界面还真是难看啊。
+# 迁移这个 wiki 到 Yard 的 Xen 。
+# 发现 SSH 速度还是比不上 Dreamhost 诶... 到底是怎么回事呢？
+

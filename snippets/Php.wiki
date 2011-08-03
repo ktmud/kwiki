@@ -1,0 +1,21 @@
+= 有用的 Php 脚本片断 =
+{{{
+
+//PHP获取最近的星期（一二三四五六天）
+//支持 '2,4' 这种参数
+
+function strhas($string, $needle, $offset = 0) {
+    return !(strpos($string, $needle, $offset) === false);
+}
+
+function get_next_weekday($day) {
+    $theTime = time();
+    while (!strhas($day, date('N', $theTime))) {
+        //逐日递增
+        $theTime += (24 * 60 * 60);
+    }
+    return date('ymd', $theTime);
+}
+
+}}}
+

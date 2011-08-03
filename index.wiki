@@ -1,4 +1,4 @@
-= 丘迟的~~搞~~维基世界 =
+= 丘迟的维基世界 =
 %toc 
 === 这是什么？ ===
 这里是[https://twitter.com/ktmud @ktmud] 的Wiki World。基于[[tips/vim/vimwiki-guide|Vimwiki]]搭建的维基世界。一切从简，侧边栏什么就不要了。如果你迷路了，可以看看[[SiteMap|站点地图]]。
@@ -6,11 +6,11 @@
 <div id="whats-special" class="lesser" style="width: 45em">
 <div class="hd">有什么特别的？</div>
 <div class="cont">
-# 本页面完全通过Vim手写，配色是也全凭自己感觉输的数字。
-# 用到很多 rgba 和 -webkit-gradient ，所以用 IE 的同学就悲剧啦。
+# 本页面完全通过Vim手写，配色也是全凭自己感觉输的数字。
+# 用到很多 rgba 和 -webkit-gradient ，所以用 IE 的同学悲剧啦！
 # 底部火焰一样的红色边框，充分展示了 border-image 的强大。
 # 如果你运气好，应该能看到右上角的自定义Google搜索，马上试一试吧！
-# 我觉得那个Table of Contents还是很漂亮的哈。
+# 我觉得那个Table of Contents还是很漂亮的哈（快捷键 Shift + Z 可以显示和隐藏哦）。
 # 集成DISQUS评论服务，有啥话请尽管向楼主说。
 # 毫无疑问，这个页面在Webkit内核的浏览器里显示效果是最好的（快来试一试[http://www.google.com/chrome/?hl=zh-CN Chrome]或[http://www.apple.com.cn/safari/ Safari]）。
 </div>
@@ -23,6 +23,7 @@
 === 原创教程 ===
 # [[tips/vim/vimwiki-guide|使用vimwiki搭建你自己的维基世界]]
 # [[tips/vim/ways-to-sync-vimwiki|自动同步你的 vimwiki 到线上网站]]
+# [[tips/Linux/vps-nginx-webserver|在VPS编译安装 nginx + php-fpm 的步骤整理]]
 
 <hr />
 
@@ -31,7 +32,7 @@
 
 === 知识参考整理 ===
 # [[ref/http-header|深入浅出 http header]]
-# [[ref/encoding-issue|有关文件编码的一些常识]]
+# [[ref/encoding-issue|有关文件编码的一些常识]] 
 
 [[ref/index|更多...]]
 
@@ -42,11 +43,14 @@
 
 * [[tips/Linux|Linux]]
 * [[tips/Vim|Vim]]
+* [[tips/Git|Git]]
 
 === 脚本片段 ===
 *最新*
 
 *索引*
+* [[snippets/JavaScript|JavaScript]]
+* [[snippets/Php|Php]]
 
 
 == 楼主是暴露狂 ==
@@ -56,16 +60,15 @@
 很好，这里以后就是我最主要的个人主页了。
 }}}
 
-* 我最近需要完成的[[Tasks|任务]]
-* 以及没事就写写的[[diary/diary|流水帐]]
+[[songs|那些让我翩翩起舞的歌]]
 
 
-==== 楼主到底是谁？ ====
+=== 楼主到底是谁？ ===
 多年以来，一直没有一个叫得顺口的网名，不能不说是一种遗憾啊。姑且还是叫我 丘迟 吧。
 
 * [[Blogs|各种博客]]
 * [http://www.douban.com/people/jyyjcc 豆瓣]
-* [http://www.renren.com/jyyjcc 人人]
+* [http://www.renren.com/hereyes 人人]
 
 <hr>
 == 其他 ==

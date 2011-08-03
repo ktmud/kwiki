@@ -1,0 +1,14 @@
+== 监控代码性能 ==
+{{{class="brush: javascript"
+var log = function(msg){
+     if(window.console){
+            var now = new Date - 0;
+            var last = arguments.callee.last;
+             if(typeof last === "number"){
+               window.console.log(msg +"        :       "+(now-last)+" ms");
+            }
+            arguments.callee.last = now;
+     }
+}
+}}}
+via http://www.cnblogs.com/rubylouvre/archive/2010/11/30/1891875.html

@@ -1,0 +1,30 @@
+== 启用 Apache 的 modconcat 节约css和js资源请求链接 ==
+淘宝 CDN 有个基于 nginx 的压缩模块，可以把多个 CSS 或 js 文件节约为一个 http 请求。比如现在的淘宝首页就有这样的地址：
+    `http://a.tbcdn.cn/p/fp/2010c/??fp-header-min.css,fp-base-min.css,fp-channel-min.css,fp-product-min.css,fp-mall-min.css,fp-category-min.css,fp-sub-min.css,fp-gdp4p-min.css,fp-css3-min.css,fp-misc-min.css?t=20101125.css`
+
+之前说过，我们可以自己[[vps-nginx-webserver|编译一个 Nginx]] ，启用这个功能。其实， nginx concat module 这个东西是从 apache 的 mod_concat 学来的([http://code.taobao.org/trac/nginx_concat_module/browser/trunk/README via])。对于那些不想单独编译一个 nginx 或者习惯了实用 apache 的同学，启用 apache 的 modconcat 显然成本更低。
+
+在 Apache 下启用 [http://code.google.com/p/modconcat/ modconcat] 的步骤如下：
+* checkout 下来 [http://code.google.com/p/modconcat/ modconcat] 的源码：
+    svn checkout http://modconcat.googlecode.com/svn/trunk/ modconcat-read-only
+* 安装 apxs ， apache 模块的编译工具。比如在 Debian 和 Ubuntu 下，这东西被放在了 apache2-threaded-dev 和 apache2-prefork-dev 里。安装任一即可。于是乎：
+    sudo apt-get install apache2-prefork-dev
+* 编译 modconcat ( -c 代表 compile  -i 代表 install  -a 代表自动添加载入该模块的语句):
+    apxs -i -a -c mod_concat.c
+    或
+    apxs2 -i -a -c mod_concat.c
+
+* 修改 conf 文件，启用 modconcat (视具体系统而定)。
+
+为方便大家 copy ，把上面的步骤统一为：
+{{{
+svn checkout http://modconcat.googlecode.com/svn/trunk/ modconcat-read-only
+sudo apt-get install apache2-prefork-dev
+cd modconcat-read-only/mod_concat
+apxs -i -a -c mod_concat.c
+sudo mv /etc/apache2/mods-available/concat.load /etc/apache2/mods-enabled/
+sudo cp conf/concat.conf /etc/apache2/mods-enabled/
+sudo service apache2 restart
+}}}
+
+欧啦！ Ubuntu 和 Debian lenny 适用。

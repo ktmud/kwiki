@@ -116,11 +116,12 @@ Anyway, 老子这个项目就是让 wiki 作为项目本身，怎么着了？好
     $ git remote add web ssh://server.example.org/home/ams/website.git<br>
     $ git push web +master:refs/heads/master
 
-他把本地的 master 分支推送给了 git server 。如果你之前也完了下提交给 github ，那你本地的当前分支其实是 dh-pages ， master 分支还保存着建立 dh-pages 之前的状态，如果没有合并分支的操作，你提交给 Web 服务器的就是已经形式死亡的 master 分支。那我们要怎么办呢？是删除 master 分支吗？还是在哪里做一下自动合并？
+他把本地的 master 分支推送给了 git server 。如果你之前也玩了下提交给 github ，那你本地的当前分支其实是 gh-pages ， master 分支还保存着建立 gh-pages 之前的状态，如果没有合并分支的操作，你提交给 Web 服务器的就是已经形式死亡的 master 分支。那我们要怎么办呢？是删除 master 分支吗？还是在哪里做一下自动合并？
 
 是的，要搞清楚这些问题，你还需要理解 [http://progit.org/book/zh/ch3-0.html Git 的分支原理]。说实话，楼主写到这里已经有点想死了。
 
-不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ `git push web dh-pages` ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 `git checkout gh-pages` 即可。
+不管怎么样，你先照着那篇英文教程里的操作昨晚吧。很好，现在你服务器上已经有了一个 master 分支。现在，我们把本地的 gh-pages 重新推上去（ `git push web gh-pages` ）。然后到服务器上把主分支切换为 gh-pages ，这样你的 Web Site 显示的才是 gh-pages 的文件。切换分支的命令很简单， cd 到你之前建立的 git 目录，执行 `git checkout gh-pages` 即可。如果遇到 'fatal: This operation must be run in a work tree
+' 这样的错误提示，你还可以直接修改 HEAD 文件，把最后的 master 改为 gh-pages 即可。
 
 一切都打点妥当之后，不要忘了修改 sync.bat ，把你的服务器也包括进去哦。
 
@@ -143,4 +144,4 @@ Anyway, 老子这个项目就是让 wiki 作为项目本身，怎么着了？好
 是的，最后压轴推荐热辣武器， Dreamweaver 的站点管理！还有那些什么杂七杂八的IDEs，都能拿来用的哟！
 
 
-%title 你要怎么同步你的 vimwiki ?  - 丘迟的维基世界
+%title 利用 Git 同步 vimwiki 到线上网站  - 丘迟的维基世界

@@ -6,8 +6,17 @@
 # [[vim/ways-to-sync-vimwiki|自动同步你的 vimwiki 到线上网站]]
 
 == 准备工作 ==
- 请先在你的 vimrc 里定义变量 $VIMFILES    是我自己在 _vimrc 里定义的变量，在 Windows 下为 `$VIM/vimfiles`
- 
+请先在你的 vimrc 里定义变量 $VIMFILES 。比如说 Windows 下，我把 vimfiles 放在了 Vim 安装目录的 `vimfiles` 目录下，而在其他操作系统是放在了用户主目录的 `.vim` 目录下：
+{{{
+if has("win32")
+    let $VIMFILES = $VIM.'/vimfiles'
+    let $V = $VIM.'/_vimrc'
+else
+    let $VIMFILES = $HOME.'/.vim'
+    let $V = $HOME.'/.vimrc'
+endif
+}}}
+
 == 你知道吗？ ==
 === Vim7.3 的持久撤销  ===
 Vim 7.3 提供 *持久撤销* (Persistent Undo) 功能，即使文件关闭后，再次打开时仍然可以撤销文件关闭之前的编辑历史。要使用这一功能，在 vimrc 中添加
@@ -43,7 +52,59 @@ nmap <leader>.cl :call RemoveOldViewFiles<cr>
 }}}
 删除 90 天以前的文件。
 
-至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现
+至于类似于“恢复工作区”这样的功能，则可以通过session文件来实现：
+
+编辑你的 vimrc :
+{{{
+" Session files Vim关闭时保存会话状态
+set sessionoptions+=unix
+set sessionoptions-=blank
+"set sessionoptions-=options
+autocmd VimEnter * call LoadSession()
+autocmd VimLeave * call MakeSession() 
+
+function! MakeSession()
+    if !has('gui_running')
+        hi clear
+    endif
+    if bufname('')  == ''
+        exe 'bdelete '.bufnr('')
+    endif
+    let l:count = 0
+    let l:i = 0
+    while l:i <= bufnr('$')
+        if buflisted(count)
+            let l:count += 1
+        endif
+        let l:i+=1
+    endwhile
+    if l:count >= 4
+        mksession! ~/.last_session.vim
+    endif
+endfunction
+
+function! LoadSession()
+    "if exists('g:SessionLoaded')
+    "return
+    "endif
+    if expand('%') == '' && filereadable($HOME.'/.last_session.vim') && !&diff
+        silent so ~/.last_session.vim
+    endif
+
+    let l:buftotal = bufnr('$')
+    let l:i = 0
+    let l:crtpath = getcwd() 
+    while l:i <= l:buftotal
+        " 列表中还未载入的buffer，如果不在当前工作目录，会被删除
+        if !bufloaded(l:i) && buflisted(l:i) && expand('%:p') !~ l:crtpath
+            exe 'bdelete '.l:i
+            echo expand('%:p') .' !~ '. l:crtpath
+        endif
+        let l:i += 1
+    endwhile
+endfunction
+}}}
+这段代码应该很好读懂，我就不解释了～ 有什么问题，请[http://wiki.ktmud.com/tips/Vim.html#disqus_thread 留言]！
 
 === 介绍 Vim 中的批量查找替换 ===
 1. *vimgrep* 命令
@@ -78,7 +139,7 @@ else
 这么简单的问题，我折腾了两个小时。之前以为是换行符的问题。唉...
 
 ==== 试试 Google Closure Linter ====
-[JSLint http://www.jslint.com/] 默认的规则在有些情况下不太实用，比如说[http://docs.jquery.com/JQuery_Core_Style_Guidelines jQuery就会无视一些JSLint的错误]。基于 Google 的[http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml 编码风格]，有一个 *[http://code.google.com/closure/utilities/ Closure Linter]*，我们可以试着把它集成到 Vim 中。
+[http://www.jslint.com/ JSLint] 默认的规则在有些情况下不太实用，比如说[http://docs.jquery.com/JQuery_Core_Style_Guidelines jQuery就会无视一些JSLint的错误]。基于 Google 的[http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml 编码风格]，有一个 *[http://code.google.com/closure/utilities/ Closure Linter]*，我们可以试着把它集成到 Vim 中。
 
 我修改了上面的 Vim 插件，有需要的可以[https://github.com/ktmud/vim-unix/raw/master/.vim/ftplugin/javascript/jslint.vim 点击这里]下载。
 
@@ -89,12 +150,32 @@ gjslint 唯一的遗憾就是“字数过多”这个限制太严格了，对于
 # 在Vimwiki中，可以用 %title 自定义输出的 HTML 的 title ，但是最好写在文件最末尾，不然如果同时使用了 %toc （自动目录）， 就会产生嵌套错误。这个bug将来可能会修正，但保持习惯是没错的。
 # 把 _vimrc 和 vimfiles 拷到 msysgit 的安装目录下( `C:\Program Files\Git\share\vim` )，可以让 Git Bash 里的 vim 也符合你平时的操作习惯。
 # NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
+# 安装新插件后，如果插件提供了帮助文档（help doc），你可能需要重建帮助文件索引，命令如下：
+    :helptags $VIMFILES/doc
 
 === 编辑 ===
+# 除了普通模式，可视模式，插入模式，你是否还知道有一个替换模式？正如在普通编辑器里按 <kbd>Insert</kbd> 键所切换入的那样，输入的文本会逐字替换光标下的字符。
 # 要在 Vim 里跨行匹配，可以用 `\_.` 匹配包括换行符在内的任意字符。
 # 使用 `\{-}` 实现类似常见 perl 正则里的 `?` 之作用的懒惰匹配，尽量少的匹配前面的匹配元。
 # 使用 `:s` (替换)命令时，添加标志位 *e* 可以忽略找不到 pattern 的错误，这在函数或键盘映射命令中非常有用。如，下面的代码可以格式化CSS（虽然并不完美）：
     map <leader>css :%s/;\s*\([a-z*_-}]\)/;\r\1/ge<cr>:%s/\(\w\)\s*{\([^\r]\)/\1\ {\r\2/ge<cr>:%s/:\(\w\)/:\ \1/ge<cr>:%s/}\(\w\\|#\\|\.\)/}\r\1/ge<cr>,=
+# 还剩 `:s` 命令，一般我们都喜欢用 `/` 做分隔符，事实上，这个斜杠，可用是任意字符。对于匹配HTML代码时，可用使用分号（`;`） ，这样就能避免总是需要用反斜杠转义HTML里面的斜杠了。
+    :'<,'>s;<span>\(.*\)</span>;\1;g
+    
+    上面的代码可用去掉选中区域的<span>标签。
+
+*你可能不知道的快速编辑快捷键：*
+`gv`          选中之前选中过的内容
+`g~{motion}`  切换{motion}跨越的文本的大小写
+`g~~`         切换当前行的大小写
+`gU{motion}`  切换为大写   
+`gu{motion}`  切换为小写
+
+不小心打开了一个需要 sudo 权限才能保存的文件，但是编辑了一大半才发现？下面的命令可以救急：
+    :w !sudo tee %
+
+也可以做一个命令映射，安静地保存：
+    command W w !sudo tee % > /dev/null
 
 === 使用 Vim Script ===
 # 获取当前buffer的总行数的函数：  `line("$")`
