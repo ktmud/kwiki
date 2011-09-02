@@ -293,7 +293,14 @@ NERDTree Explorer 里带星号的文件代表这个文件是可执行文件
 使用 <code>:s</code> (替换)命令时，添加标志位 <strong>e</strong> 可以忽略找不到 pattern 的错误，这在函数或键盘映射命令中非常有用。如，下面的代码可以格式化CSS（虽然并不完美）：
     map &lt;leader&gt;css :%s/;\s*\([a-z*_-}]\)/;\r\1/ge&lt;cr&gt;:%s/\(\w\)\s*{\([^\r]\)/\1\ {\r\2/ge&lt;cr&gt;:%s/:\(\w\)/:\ \1/ge&lt;cr&gt;:%s/}\(\w\\|#\\|\.\)/}\r\1/ge&lt;cr&gt;,=
 </li>
+<li>
+还剩 <code>:s</code> 命令，一般我们都喜欢用 <code>/</code> 做分隔符，事实上，这个斜杠，可用是任意字符。对于匹配HTML代码时，可用使用分号（<code>;</code>） ，这样就能避免总是需要用反斜杠转义HTML里面的斜杠了。
+    :'&lt;,'&gt;s;&lt;span&gt;\(.*\)&lt;/span&gt;;\1;g
+</li>
 </ol>
+<blockquote>
+上面的代码可用去掉选中区域的&lt;span&gt;标签。
+</blockquote>
 
 <p>
 <strong>你可能不知道的快速编辑快捷键：</strong>
