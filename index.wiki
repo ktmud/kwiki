@@ -45,6 +45,9 @@
 * [[tips/Vim|Vim]]
 * [[tips/Git|Git]]
 
+* [[tips/CouchDB|CoudhDB]]
+<!--* [[tips/Nodejs|Nodejs]]-->
+
 === 脚本片段 ===
 *最新*
 
@@ -77,7 +80,6 @@
 
 == 各种注意 ==
 - 本页面支持评论，基于[http://diqus.com DISQUS]实现。但DISQUS有时候实在慢得可以，评论输入框里居然还有iframe。各位如果恰巧不幸赶上DISQUS抽风，又正好想留言的话，还望多一点耐心。
-- 当然，在 IE 这个很戳的浏览器里是不能评论的。
 - 右上角搜索的结果还不完全。这是Google对本站索引太慢造成的。如果你希望有更强力的搜索，就赶快给俺加个友链吧！
 
 %title 欢迎来到丘迟的维基世界 - a site build with Vim, Vimwiki and Git

@@ -1,0 +1,49 @@
+= Couchdb =
+
+== 基于 Map/Reduce 的翻页 ==
+
+Couchdb 数据的翻页比较猥琐，[http://guide.couchdb.org/draft/recipes.html#pagination 官方推荐的做法]是在 view 里每次多取一个 item ，通过这个 item 的 id 来指定下一页的 offset ( `?startkey_docid=xxxx` ) 。据说这种方法效率最高，但是就没办法做到最普通的 `/page2`, `/page3` 这样的 URL 了，的确是很挫哈。
+
+然后我就想到下面这个通过 reduce 来事先获取所有页码的 offset key 的办法。这样可以在应用端先缓存这个 reduce 结果，然后按照页码来找到底用哪个 key 。
+
+{{{class="brush: javascript"
+{
+  map: function(doc) {
+    var cate = doc.cate;
+    if (!cate) return;
+
+    var title = doc.title && doc.title.trim();
+    var sid = (doc.slug || title || doc._id);
+
+    emit(cate, { sid: sid, title: title });
+  },
+  reduce: function(keys, vals, rereduce) {
+    if (rereduce) {
+      var ids = Array.prototype.concat.apply([], vals);
+      var total = ids.length;
+      var ret = [];
+      for (var i = 11; i < total; i += 10) {
+        ret.push(ids[i]);
+      }
+      return ret;
+    } else {
+      var ids = [];
+      var total = vals.length;
+      for (var i = 0; i < total; i++) {
+        ids.push(keys[i][1]);
+      }
+      return ids;
+    }
+  }
+}
+}}}
+
+首先我们要理解何谓 `rereduce` 。 reduce 其实是把所有 value 拆成很多块，并行计算，计算的结果再传到 reduce 函数里进行 rereduce 。再次计算时 `keys` 就为 `null` ， `rereduce` 为 `true` 。
+
+上面的 reduce 就是把所有 key 提出来，然后 rereduce 的时候把提出来的 keys 合并起来，然后再按照每页 10 个的规则挑出具体的 offset key 。
+
+不过最后实践时才发现，此法根本不可行，因为 rereduce 很多时候并不只执行一次，尤其是当数据量比较大的时候。而且就算只会有一次 rereduce，如果 keys 太多，这样的操作也会很浪费资源。
+
+所以正解是，只在 reduce 方法里统计每个 key 的条目个数，然后再在应用端具体计算和缓存所需页码的 offset key 。
+
+真是纠结万分啊。

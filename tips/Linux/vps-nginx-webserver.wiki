@@ -10,7 +10,7 @@
 {{{class="brush: bash"
 yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers
 }}}
-    
+
 {{{class="brush: bash"
 yum -y install pcre-devel perl-devel subversion git bison cmake ccmake gmp-devel pam-devel libc-client-devel automake libevent libevent-devel
 }}}
@@ -19,7 +19,7 @@ yum -y install pcre-devel perl-devel subversion git bison cmake ccmake gmp-devel
 {{{class="brush: bash"
 apt-get install libpcre3 libpcre3-dev libssl-dev bison cmake gawk flex gcc g++ autoconf make libpng12-dev libjpeg62-dev libfreetype6-dev ncurses-bin libncurses5-dev libncurses5 subversion git zlib1g-dev curl libcurl4-openssl-dev libxml2-dev bzip2 libbz2-dev libgmp3-dev libgmp3c2 libc-client-dev libsasl2-dev
 }}}
-    
+
 先主机上建立存放安装包的目录：
 {{{
 mkdir ~/packa
@@ -28,10 +28,10 @@ cd ~/packa
 
 下载安装包：
 {{{class="brush: bash"
-wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
-wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.13.tar.gz/from/http://mysql.he.net/
-wget http://nginx.org/download/nginx-1.0.4.tar.gz
-wget http://cn.php.net/get/php-5.3.6.tar.bz2/from/us2.php.net/mirror
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.17.tar.gz/from/http://mysql.he.net/
+wget http://nginx.org/download/nginx-1.0.8.tar.gz
+wget http://cn.php.net/get/php-5.3.8.tar.bz2/from/us2.php.net/mirror
 svn checkout http://code.taobao.org/svn/nginx_concat_module/trunk/ nginx_concat_module
 }}}
 
@@ -65,16 +65,16 @@ static u_char header[] =
 "\<h1\>索引："
 ;
 
-static u_char tail[] = 
-"<p id=\"footer\">&copy; <a href=\"https://twitter.com/ktmud\">@ktmud</a></p></body>" CRLF 
-"</html>" CRLF 
+static u_char tail[] =
+"<p id=\"footer\">&copy; <a href=\"https://twitter.com/ktmud\">@ktmud</a></p></body>" CRLF
+"</html>" CRLF
 ;
 }}}
 那个 footer 里的版权信息你可以自己根据需要修改哈。
 
 然后，根据 [http://wiki.nginx.org/NginxChsInstallOptions nginx 官方维基] 的介绍以及自己的需求，使用如下编译选项：
 {{{class="brush: bash"
-  ./configure \
+./configure \
   --prefix=/usr/local/webserver/nginx \
   --user=www \
   --group=www \
@@ -82,9 +82,9 @@ static u_char tail[] =
   --http-log-path=/srv/log/nginx/access_log \
   --error-log-path=/srv/log/nginx/error_log \
   --pid-path=/var/run/nginx.pid \
-  --http-client-body-temp-path=/var/tmp/nginx/client \
-  --http-proxy-temp-path=/var/tmp/nginx/proxy \
-  --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+  --http-client-body-temp-path=/var/tmp/nginx_client \
+  --http-proxy-temp-path=/var/tmp/nginx_proxy \
+  --http-fastcgi-temp-path=/var/tmp/nginx_fastcgi \
   --with-md5-asm \
   --with-sha1-asm \
   --with-sha1=/usr/include \
@@ -93,8 +93,8 @@ static u_char tail[] =
   --with-http_flv_module \
   --with-http_gzip_static_module \
   --with-http_stub_status_module \
-  --add-module=/root/packa/nginx_concat_module
-}}} 
+  --add-module=../nginx_concat_module
+}}}
 
 注意最后一行， add-module ，这里添加的是淘宝的文件combo模块(之前我们有通过 svn 命令checkout出来)。详细了解请点此： http://code.taobao.org/project/view/59/
 
@@ -106,11 +106,11 @@ static u_char tail[] =
 
 二话不说，先把 libiconv 装了（解压 ./configure  make install 即可）。
 
-我们下载的是 MYSQL 5.5.8 ，需要使用 cmake 安装。 cmake 在 fedora 里面可以直接 yum ，但对于 CentOS ， yum 一般是找不到它的，需要[http://www.cmake.org/cmake/resources/software.html 自己下载]。 
+我们下载的是 MYSQL 5.5.8 ，需要使用 cmake 安装。 cmake 在 fedora 里面可以直接 yum ，但对于 CentOS ， yum 一般是找不到它的，需要[http://www.cmake.org/cmake/resources/software.html 自己下载]。
 {{{
 wget http://www.cmake.org/files/v2.8/cmake-2.8.3-Linux-i386.tar.gz
 tar zxf cmake-2.8.3-Linux-i386.tar.gz
-cd 
+cd
 }}}
 
 解压 mysql 后，在其目录下首先执行 `ccmake .` ，调整一些配置选项，比如安装目录之类。第一次运行 ccmake , 需要按 <kbd>g</kbd> 执行一次生成配置文件的操作。然后才可以更改选项。按 Enter 修改，具体选项请参考[MySQL官方文档 http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html]。
@@ -201,7 +201,7 @@ ln -sf /usr/local/webserver/php/sbin/php-fpm /usr/sbin/php-fpm
 
 === 编译 PHP 的疑难解答 ===
 
-1. 遭遇  error while loading shared libraries: libiconv.so.2: cannot open shared object file: No such file or directory 
+1. 遭遇  error while loading shared libraries: libiconv.so.2: cannot open shared object file: No such file or directory
 
 *解决办法*:
  # 在 `/etc/ld.so.conf` 中加一行 `/usr/local/lib`
@@ -217,7 +217,7 @@ make: *** [ext/mcrypt/mcrypt.la] 错误 1
 *解决办法*:
 {{{
 wget "http://downloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.gz?modtime=1171868460&big_mirror=0"
-tar zxvf libmcrypt-2.5.8.tar.gz 
+tar zxvf libmcrypt-2.5.8.tar.gz
 cd libmcrypt-2.5.8/
 ./configure
 make

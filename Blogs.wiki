@@ -4,7 +4,7 @@
 
 - [http://blog.benhuoer.com 娱乐博客 笨活儿]
 - [http://ktmud.com 技术博客 千吨泥]
-- [http://fallwith.me 闹骚满地 Fallwith.me]
+- [http://fallwith.me 闹骚满地 Fallwith.me] （该域名已被墙，请绑定host: 184.22.251.84  fallwith.me）
 - [http://yjc.me 实名博客]
 
 %title 丘迟的维基 - 博客们
