@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CouchDB</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="Stylesheet" type="text/css" href="../style.css" />
+<script>var root_path = '../';</script>
+<link href="http://github.com/ktmud/kwiki/commits/master.atom" rel="alternate" title="Kdmud Wiki 的最新更改" type="application/atom+xml" /> 
+</head>
+<body>
+<div id="all">
+<div id="header">
+	<ul id="top-nav">
+		<li>
+			<a href="../index.html">首页</a>
+		</li>
+		<li>
+			<a href="../tips/">经验总结</a>
+		</li>
+		<li>
+			<a href="../diary/diary.html">日记</a>
+		</li>
+	</ul>
+</div>
+<div id="cse"></div>
+<div id="main">
+<h1 id="toc_1">Couchdb</h1>
+
+<h2 id="toc_1.1">基于 Map/Reduce 的翻页</h2>
+
+<p>
+Couchdb 数据的翻页比较猥琐，<a href="http://guide.couchdb.org/draft/recipes.html#pagination">官方推荐的做法</a>是在 view 里每次多取一个 item ，通过这个 item 的 id 来指定下一页的 offset ( <code>?startkey_docid=xxxx</code> ) 。据说这种方法效率最高，但是就没办法做到最普通的 <code>/page2</code>, <code>/page3</code> 这样的 URL 了，的确是很挫哈。
+</p>
+
+<p>
+然后我就想到下面这个通过 reduce 来事先获取所有页码的 offset key 的办法。这样可以在应用端先缓存这个 reduce 结果，然后按照页码来找到底用哪个 key 。
+</p>
+
+<pre class="brush: javascript">
+{
+  map: function(doc) {
+    var cate = doc.cate;
+    if (!cate) return;
+
+    var title = doc.title &amp;&amp; doc.title.trim();
+    var sid = (doc.slug || title || doc._id);
+
+    emit(cate, { sid: sid, title: title });
+  },
+  reduce: function(keys, vals, rereduce) {
+    if (rereduce) {
+      var ids = Array.prototype.concat.apply([], vals);
+      var total = ids.length;
+      var ret = [];
+      for (var i = 11; i &lt; total; i += 10) {
+        ret.push(ids[i]);
+      }
+      return ret;
+    } else {
+      var ids = [];
+      var total = vals.length;
+      for (var i = 0; i &lt; total; i++) {
+        ids.push(keys[i][1]);
+      }
+      return ids;
+    }
+  }
+}
+</pre>
+
+<p>
+首先我们要理解何谓 <code>rereduce</code> 。 reduce 其实是把所有 value 拆成很多块，并行计算，计算的结果再传到 reduce 函数里进行 rereduce 。再次计算时 <code>keys</code> 就为 <code>null</code> ， <code>rereduce</code> 为 <code>true</code> 。
+</p>
+
+<p>
+上面的 reduce 就是把所有 key 提出来，然后 rereduce 的时候把提出来的 keys 合并起来，然后再按照每页 10 个的规则挑出具体的 offset key 。
+</p>
+
+<p>
+不过最后实践时才发现，此法根本不可行，因为 rereduce 很多时候并不只执行一次，尤其是当数据量比较大的时候。而且就算只会有一次 rereduce，如果 keys 太多，这样的操作也会很浪费资源。
+</p>
+
+<p>
+所以正解是，只在 reduce 方法里统计每个 key 的条目个数，然后再在应用端具体计算和缓存所需页码的 offset key 。
+</p>
+
+<p>
+真是纠结万分啊。
+</p>
+</div>
+<div id="footer">
+    <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
+</div>
+</div>
+<script src="../jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../vimwiki.js" type="text/javascript"></script>
+</body>
+</html>

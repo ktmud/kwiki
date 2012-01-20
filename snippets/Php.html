@@ -24,7 +24,26 @@
 </div>
 <div id="cse"></div>
 <div id="main">
-<h1 id="toc_1">暂无内容</h1>
+<h1 id="toc_1">有用的 Php 脚本片断</h1>
+<pre>
+
+//PHP获取最近的星期（一二三四五六天）
+//支持 '2,4' 这种参数
+
+function strhas($string, $needle, $offset = 0) {
+    return !(strpos($string, $needle, $offset) === false);
+}
+
+function get_next_weekday($day) {
+    $theTime = time();
+    while (!strhas($day, date('N', $theTime))) {
+        //逐日递增
+        $theTime += (24 * 60 * 60);
+    }
+    return date('ymd', $theTime);
+}
+
+</pre>
 </div>
 <div id="footer">
     <p>&copy; 2010 丘迟 &nbsp;&nbsp; <a href="../SiteMap.html" title="站点地图">给我一点导航吧</a></p>
